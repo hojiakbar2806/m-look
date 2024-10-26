@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Provider } from "react-redux";
-import store from "./globalReux/store";
 import ReduxProvider from "./globalReux/provider";
 import Header from "./components/header/header";
 

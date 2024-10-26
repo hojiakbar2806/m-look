@@ -1,6 +1,7 @@
-import { IAds } from "./type";
+import Image from "next/image";
+import { IAdsContent } from "src/app/interface/product";
 
-const AdsBanner = ({ ads }: { ads: IAds }) => {
+const AdsBanner = ({ ads }: { ads: IAdsContent }) => {
   return (
     <div className="w-full flex flex-col overflow-hidden relative">
       <div className="absolute left-14 bottom-1/3 z-10">
@@ -21,7 +22,9 @@ const AdsBanner = ({ ads }: { ads: IAds }) => {
           {ads.discount} OFF
         </h1>
       </div>
-      <img
+      <Image
+        width={1000}
+        height={1000}
         className="w-full -z-10 left-0 top-0 object-cover"
         src={ads.img}
         alt="Ads"

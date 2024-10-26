@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { IAds } from "./type";
 import Wrapper from "../wrapper";
+import { IAdsContent } from "src/app/interface/product";
 
-const AdsProduct = ({ ads }: { ads: IAds }) => {
+const AdsProduct = ({ ads }: { ads: IAdsContent }) => {
   return (
     <Wrapper className="-translate-y-24 gap-2">
       {ads.product.map((item, i) => (

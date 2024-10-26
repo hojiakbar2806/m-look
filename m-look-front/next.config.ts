@@ -1,9 +1,8 @@
-import { combineReducers } from 'redux';
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["spng.pngfind.com","wallpapers.com", "picsum.photos", "localhost"],
+    domains: ["spng.pngfind.com","wallpapers.com", "picsum.photos", "images.pexels.com"],
   },
 };
 
