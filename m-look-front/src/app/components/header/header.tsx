@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import HeaderItems from "./headerItems";
 import NavBar from "./navBar";
 
@@ -13,10 +14,10 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="flex flex-col z-10 sticky top-0 w-full border-b">
+    <React.Fragment>
       <HeaderItems />
       <NavBar links={navLinks} />
-    </header>
+    </React.Fragment>
   );
 };
 

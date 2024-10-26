@@ -1,3 +1,4 @@
+import CartDialog from "./components/cartDialog/cartDialog";
 import Ads from "./components/ads/ads";
 import BestSeller from "./components/bestSeller/bestSeller";
 import BrandNews from "./components/brandNews/brandNews";
@@ -8,6 +9,7 @@ export default function Home() {
       <Ads />
       <BestSeller />
       <BrandNews />
+      <CartDialog />
     </div>
   );
 }

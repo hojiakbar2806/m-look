@@ -3,10 +3,10 @@ import ProductGridCard from "../productCard/productGridCard";
 import ProductsWrapper from "../productCard/ProductWrapper";
 
 const BestSellerProducts = async () => {
-  // await new Promise((resolve) => setTimeout(resolve, 100));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
   const product = {
     id: 1,
-    img: "",
+    img: "https://picsum.photos/500/350",
     title: "product name",
     price: 100,
     oldPrice: 200,

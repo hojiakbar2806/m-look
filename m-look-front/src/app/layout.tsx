@@ -20,9 +20,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable}`}>
+      <body className={`${poppins.variable} flex flex-col items-center`}>
         <ReduxProvider>
-          <main>
+          <main className="max-w-[1710px] w-full">
             <Header />
             {children}
           </main>

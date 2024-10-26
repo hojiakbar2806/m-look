@@ -9,11 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@radix-ui/react-navigation-menu": "^1.2.1",
-    "@radix-ui/react-slot": "^1.1.0",
     "@reduxjs/toolkit": "^2.3.0",
-    "@shadcn/ui": "^0.0.4",
-    "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
@@ -22,9 +18,9 @@
     "react-dom": "^18.0.0",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
-    "shadcn-ui": "^0.9.2",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -126,3 +126,15 @@
 .text-responsive {
   @apply text-sm md:text-base lg:text-lg xl:text-2xl;
 }
+
+@keyframes liquidWave {
+  0% {
+    transform: translateY(100%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}

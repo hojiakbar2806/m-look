@@ -12,6 +12,10 @@ export interface IProduct {
   discount: string;
 }
 
+export interface ICartProduct extends IProduct {
+    quantity: number;
+    totalPrice: number;
+}
 
 export interface IProducts {
   products: IProduct[];
