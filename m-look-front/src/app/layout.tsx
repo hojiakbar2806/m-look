@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Provider } from "react-redux";
+import store from "./globalReux/store";
+import ReduxProvider from "./globalReux/provider";
+import Header from "./components/header/header";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const poppins = localFont({
+  src: "../assets/fonts/Poppins-Regular.ttf",
+  variable: "--font-poppins",
   weight: "100 900",
 });
 
@@ -20,15 +19,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${poppins.variable}`}>
+        <ReduxProvider>
+          <main>
+            <Header />
+            {children}
+          </main>
+        </ReduxProvider>
       </body>
     </html>
   );
