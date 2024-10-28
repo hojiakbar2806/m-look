@@ -17,6 +17,11 @@ export interface ICartProduct extends IProduct {
     totalPrice: number;
 }
 
+export interface ICart {
+  products: ICartProduct[];
+  totalPrice: number;
+}
+
 export interface IProducts {
   products: IProduct[];
 }

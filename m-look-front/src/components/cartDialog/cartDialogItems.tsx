@@ -21,7 +21,7 @@ const CartDialogItems = ({ item }: { item: ICartProduct }) => {
     } else {
       setHeartColor("none");
     }
-  }, [wishList]);
+  }, [wishList, item.id]);
 
   const title = item.title.slice(0, 15) + "...";
 

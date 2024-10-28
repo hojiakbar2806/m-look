@@ -1,20 +1,24 @@
 import React from "react";
-import ProductBar from "src/components/productBar/productBar";
+import CategoryCard from "src/components/categoryCard/categoryCard";
+import Header from "src/components/header/header";
 import Products from "src/components/products/products";
 
-const CategoryPage = async ({
-  params,
-}: {
-  params: { productType: string };
-}) => {
-  const { productType } = await params;
-
-  return (
-    <div className="flex-1 flex flex-col gap-4">
-      <ProductBar productLength={10} />
-      <Products productType={productType} />
-    </div>
-  );
+type CategoryPageProps = {
+  params: Promise<{ productType: string }>;
 };
 
-export default CategoryPage;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { productType } = await params;
+
+  console.log(productType);
+
+  return (
+    <React.Fragment>
+      <Header />
+      <div className="w-full gap-4 flex global-padding">
+        <CategoryCard />
+        <Products productType={productType} />
+      </div>
+    </React.Fragment>
+  );
+}

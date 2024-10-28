@@ -20,7 +20,7 @@ const HeaderItems = () => {
   useEffect(() => {
     setCartLength(cart.products.length);
     setTotalPrice(cart.totalPrice);
-  }, [cart]);
+  }, [cart, dispatch]);
 
   useEffect(() => {
     if (headerRef.current) {

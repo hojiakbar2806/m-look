@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setHeaderItemsHeight } from "src/globalReux/feature/navbarHeightSlice";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "src/globalReux/store";
 
 const NavBar: React.FC<{
@@ -12,8 +11,6 @@ const NavBar: React.FC<{
 }> = ({ links }) => {
   const pathname = usePathname();
 
-  const navBarRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
   const [scrollingState, setScrollingState] = useState<"up" | "down">("up");
   const [lastScrollY, setLastScrollY] = useState(0);
   const { headerItemsHeight: height } = useSelector(

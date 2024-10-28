@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import BestSellerProducts from "./bestSellerProducts";
 import GridProductSkeleton from "../productCard/skeleton/gridProductSkeleton";
-import ListProductSkeleton from "../productCard/skeleton/listProductSkeleton";
 
 const BestSeller = () => {
   return (

@@ -1,3 +1,4 @@
+import ServiceCard from "src/components/serviceCard/serviceCard";
 import Ads from "../components/ads/ads";
 import BestSeller from "../components/bestSeller/bestSeller";
 import BrandNews from "../components/brandNews/brandNews";
@@ -10,6 +11,7 @@ export default function Home() {
       <Ads />
       <BestSeller />
       <BrandNews />
+      <ServiceCard />
     </div>
   );
 }

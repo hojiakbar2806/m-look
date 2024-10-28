@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import HeaderItems from "./headerItems";
 import NavBar from "./navBar";
 
