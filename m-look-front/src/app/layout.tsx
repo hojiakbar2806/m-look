@@ -1,8 +1,9 @@
+import "src/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
-import ReduxProvider from "./globalReux/provider";
-import Header from "./components/header/header";
+import ReduxProvider from "src/providers/reduxProvider";
+import CartDialog from "src/components/cartDialog/cartDialog";
+import ReactQueryProvider from "src/providers/reactQueryProvider";
 
 const poppins = localFont({
   src: "../assets/fonts/Poppins-Regular.ttf",
@@ -22,10 +23,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} flex flex-col items-center`}>
         <ReduxProvider>
-          <main className="max-w-[1710px] w-full">
-            <Header />
-            {children}
-          </main>
+          <ReactQueryProvider>
+            <main className="max-w-[1710px] w-full">{children}</main>
+          </ReactQueryProvider>
+          <CartDialog />
         </ReduxProvider>
       </body>
     </html>
