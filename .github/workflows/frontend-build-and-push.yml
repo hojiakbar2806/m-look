@@ -1,0 +1,53 @@
+name: Rental frontend deploy
+
+on:
+  push:
+    branches:
+      - frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Hub Login
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --cache-from ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest \
+            --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest ./frontend
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest
+
+      - name: Verify Docker Image
+        run: docker inspect ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest --format '{{.Id}}'
+
+      # - name: Deploy to AWS
+      #   run: |
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+      #     chmod 600 ~/ssh_key
+
+      #     ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+      #       cd ~/rental-yards
+
+      #       echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
+
+      #       git pull origin frontend
+
+      #       rm -rf frontend backend .github
+
+      #       sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest
+
+      #       sudo docker compose stop frontend
+      #       sudo docker compose rm -f frontend
+      #       sudo docker compose up -d frontend
+
+      #       sudo docker image prune -f
+      #       sudo docker container prune -f
+      #     EOF

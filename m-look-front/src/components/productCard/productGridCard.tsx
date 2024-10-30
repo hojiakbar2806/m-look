@@ -28,9 +28,9 @@ const ProductGridCard = ({ product }: { product: IProduct }) => {
     <div className="group relative overflow-hidden border rounded-lg shadow-md flex flex-col items-center">
       <figure className="w-full relative">
         <Image
+          src={product.img}
           width={500}
           height={350}
-          src={product.img}
           alt="Mahsulot rasmi"
         />
         <span className="absolute right-0 bottom-0 bg-secondary text-white px-2 text-xs md:text-lg">

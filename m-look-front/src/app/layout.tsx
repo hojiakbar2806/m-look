@@ -6,7 +6,7 @@ import CartDialog from "src/components/cartDialog/cartDialog";
 import ReactQueryProvider from "src/providers/reactQueryProvider";
 
 const poppins = localFont({
-  src: "../assets/fonts/Poppins-Regular.ttf",
+  src: "../fonts/Poppins-Regular.ttf",
   variable: "--font-poppins",
   weight: "100 900",
 });

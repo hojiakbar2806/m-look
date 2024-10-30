@@ -27,7 +27,7 @@ const CartDialogItems = ({ item }: { item: ICartProduct }) => {
 
   return (
     <div className="w-full h-28 p-3 border rounded-sm flex justify-between gap-2">
-      <Image src={item.img} alt="product image" width={100} height={100} />
+      <Image className="w-1/3" src={item.img} alt="product image" width={500} height={350} />
       <div className="h-full flex-1 flex flex-col content-between justify-between">
         <div className="flex justify-between items-center">
           <h1 className="text-xl capitalize">{title}</h1>

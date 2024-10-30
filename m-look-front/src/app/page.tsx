@@ -5,6 +5,7 @@ import BrandNews from "../components/brandNews/brandNews";
 import Header from "../components/header/header";
 
 export default function Home() {
+
   return (
     <div className="w-full flex flex-col">
       <Header />

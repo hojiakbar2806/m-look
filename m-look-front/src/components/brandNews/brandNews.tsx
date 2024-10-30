@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 
-import ShoesImage from "src/assets/images/shoes.png";
-
 const BrandNews = () => {
   return (
     <div className="global-padding flex justify-center bg-primary md:flex-row items-center flex-col-reverse py-6 md:py-12 mt-20">
@@ -19,10 +17,11 @@ const BrandNews = () => {
       </div>
       <Image
         className="md:w-1/2 -translate-y-32"
-        src={ShoesImage}
+        src={"/shoes.png"}
         alt="brand news"
         width={600}
         height={600}
+        priority
       />
     </div>
   );

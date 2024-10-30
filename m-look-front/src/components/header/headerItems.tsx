@@ -26,7 +26,7 @@ const HeaderItems = () => {
     if (headerRef.current) {
       dispatch(setHeaderItemsHeight(headerRef.current.offsetHeight));
     }
-  }, [headerRef]);
+  }, [headerRef, dispatch]);
 
   return (
     <div

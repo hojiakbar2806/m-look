@@ -10,8 +10,6 @@ type CategoryPageProps = {
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { productType } = await params;
 
-  console.log(productType);
-
   return (
     <React.Fragment>
       <Header />

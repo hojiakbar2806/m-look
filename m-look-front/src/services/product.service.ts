@@ -1,19 +1,6 @@
+import { ISearchParams } from "src/interface/mixin";
 import { IProduct } from "src/interface/product";
 
-export interface ISearchParams {
-  category?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  minRating?: number;
-  maxRating?: number;
-  sortBy?: "asc" | "desc";
-  order?: string;
-  brand?: string;
-  rating?: string;
-  pageLimit?: string;
-  page?: string;
-  _limit?: string;
-}
 
 export const fetchProducts = async (searchParams: URLSearchParams): Promise<IProduct[]> => {
   const params: ISearchParams = {

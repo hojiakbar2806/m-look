@@ -28,6 +28,7 @@ const AdsBanner = ({ ads }: { ads: IAdsContent }) => {
         className="-z-10 left-0 top-0 object-cover"
         src={ads.img}
         alt="Ads"
+        priority
       />
     </div>
   );
