@@ -20,7 +20,7 @@ jobs:
         run: |
           docker build \
             --cache-from ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest \
-            --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest ./backend
+            --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest ./m-look-back
 
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest
