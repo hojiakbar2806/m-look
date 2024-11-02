@@ -11,12 +11,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const { productType } = await params;
 
   return (
-    <React.Fragment>
+    <div className="w-full">
       <Header />
-      <div className="w-full gap-4 flex global-padding">
+      <div className="w-full gap-4 flex md:px-16 lg:px-24">
         <CategoryCard />
         <Products productType={productType} />
       </div>
-    </React.Fragment>
+    </div>
   );
 }

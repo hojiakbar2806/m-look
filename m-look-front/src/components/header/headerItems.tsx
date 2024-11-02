@@ -1,43 +1,46 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import LanguageDropdown from "./langDropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/globalReux/store";
 import { Search, ShoppingCart, UserRound } from "lucide-react";
 import { openCartDialog } from "src/globalReux/feature/cartSlice";
-import { setHeaderItemsHeight } from "src/globalReux/feature/navbarHeightSlice";
+import { useRouter, useSearchParams } from "next/navigation";
+import useDebounce from "src/lib/useDebounce";
 
 const HeaderItems = () => {
   const [onFocus, setOnFocus] = useState(false);
-  const { cart } = useSelector((state: RootState) => state.cart);
   const [cartLength, setCartLength] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-
+  const [searchValue, setSearchValue] = useState("");
+  const { cart } = useSelector((state: RootState) => state.cart);
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
   const dispatch = useDispatch();
-  const headerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+
+  const debouncedValue = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      params.set("search", debouncedValue);
+      router.push(`/product/?${params.toString()}`);
+    }
+  }, [debouncedValue]);
 
   useEffect(() => {
     setCartLength(cart.products.length);
     setTotalPrice(cart.totalPrice);
   }, [cart, dispatch]);
 
-  useEffect(() => {
-    if (headerRef.current) {
-      dispatch(setHeaderItemsHeight(headerRef.current.offsetHeight));
-    }
-  }, [headerRef, dispatch]);
-
   return (
-    <div
-      ref={headerRef}
-      className="global-padding sticky top-0 z-40 flex w-full bg-white justify-between items-center border-b"
-    >
+    <div className="global-padding h-20 sticky top-0 z-40 flex w-full bg-white justify-between items-center border-b">
       <LanguageDropdown />
       <ul className="flex items-center gap-8">
         <li>
           <Link
-            href={""}
+            href={"/profile"}
             className="flex text-sm md:text-lg lg:text-xl items-center gap-2"
           >
             <UserRound className="text-dark  size-4 md:size-6" />
@@ -67,6 +70,7 @@ const HeaderItems = () => {
             <input
               onFocus={() => setOnFocus(true)}
               onBlur={() => setOnFocus(false)}
+              onChange={(e) => setSearchValue(e.target.value)}
               className={`transition-all text-xs sm:text-sm md:text-lg text-dark placeholder:text-dark/50 duration-300 outline-none ${
                 onFocus ? "w-32 sm:w-60" : "w-0"
               }`}

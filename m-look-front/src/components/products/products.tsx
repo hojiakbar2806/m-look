@@ -11,8 +11,10 @@ import ProductGridCard from "../productCard/productGridCard";
 import ProductsWrapper from "../productCard/ProductWrapper";
 import ProductListCard from "../productCard/productListCard";
 
-const Products = ({ productType }: { productType: string }) => {
+const Products = ({ productType, q }: { productType: string, q?: string }) => {
   const searchParams = useSearchParams();
+
+  console.log(q);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["products", searchParams.toString(), productType],
@@ -37,12 +39,12 @@ const Products = ({ productType }: { productType: string }) => {
   const view = searchParams.get("view") === "list" ? "list" : "grid";
 
   return (
-    <>
-      <div className="w-full flex flex-col justify-enter items-center gap-4">
+    <React.Fragment>
+      <div className="w-full flex flex-col justify-enter items-center py-4 gap-4">
         <ProductBar productLength={data?.length || 0} />
 
         <ProductsWrapper view={view}>
-          {data?.map((item, i) =>
+          {[...Array(20)].map((item, i) =>
             view ? (
               <ProductGridCard key={i} product={product} />
             ) : (
@@ -60,7 +62,7 @@ const Products = ({ productType }: { productType: string }) => {
           )}
         </ProductsWrapper>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

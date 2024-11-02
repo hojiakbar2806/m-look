@@ -1,5 +1,21 @@
 import React from "react";
+import Header from "src/components/header/header";
+import Products from "src/components/products/products";
 
-export default function Product() {
-  return <div></div>;
+type param = {
+  params: Promise<{ params: string }>;
+  searchParams: Promise<{ searchParams: string }>;
+};
+
+export default async function Product({ searchParams }: param) {
+  const searchParam = await searchParams;
+
+  return (
+    <div>
+      <Header />
+      <div className="w-full ">
+        <Products productType="all" q={searchParam.searchParams} />
+      </div>
+    </div>
+  );
 }

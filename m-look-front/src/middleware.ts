@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-
-  const protectedRoutes = ["/profile/as"];
-
-
+const protectedRoutes = ["/profile"];
 
 export function middleware(request: NextRequest) {
   const isLoggedIn = request.cookies.get("token"); 
@@ -17,7 +14,3 @@ export function middleware(request: NextRequest) {
   }
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*"], 
-};

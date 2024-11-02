@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setNavbarState } from "src/globalReux/feature/navbarState";
 import { RootState } from "src/globalReux/store";
 
 const NavBar: React.FC<{
@@ -11,38 +12,34 @@ const NavBar: React.FC<{
 }> = ({ links }) => {
   const pathname = usePathname();
 
-  const [scrollingState, setScrollingState] = useState<"up" | "down">("up");
   const [lastScrollY, setLastScrollY] = useState(0);
-  const { headerItemsHeight: height } = useSelector(
-    (state: RootState) => state.navbarHeight
-  );
+  const navbarState = useSelector((state: RootState) => state.navbarHeight);
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > 0) {
-        setScrollingState(currentScrollY < lastScrollY ? "up" : "down");
+        dispatch(setNavbarState(currentScrollY < lastScrollY ? true : false));
       }
 
       if (currentScrollY < 20) {
-        setScrollingState("up");
+        dispatch(setNavbarState(true));
       }
-
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [height, lastScrollY]);
+  }, [lastScrollY, dispatch]);
 
   return (
     <nav
-      className={`global-padding flex justify-between w-full bg-white sticky top-0 transition-all duration-300 z-[39] shadow-md ${
-        scrollingState === "up" && `top-0`
-      }`}
-      style={{ top: scrollingState === "up" ? `${height}px` : "0" }}
+      data-state={navbarState.isTop}
+      className="global-padding data-[state=true]:top-20 flex justify-between w-full bg-white sticky top-0 transition-all duration-300 z-[39] shadow-md "
     >
       <div className="text-sm md:text-lg lg:text-xl">LOGO</div>
       <ul className="flex items-center gap-12">

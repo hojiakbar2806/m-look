@@ -21,10 +21,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} flex flex-col items-center`}>
+      <body className={`${poppins.variable} w-full flex flex-col items-center`}>
         <ReduxProvider>
           <ReactQueryProvider>
-            <main className="max-w-[1710px] w-full">{children}</main>
+            <main className="max-w-[1710px] h-screen w-full flex flex-col">
+              {children}
+            </main>
           </ReactQueryProvider>
           <CartDialog />
         </ReduxProvider>

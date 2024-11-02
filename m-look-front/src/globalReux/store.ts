@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import cartReducer from './feature/cartSlice';
 import wishListReducer from './feature/wishListSlice';
-import navbarHeightReducer from './feature/navbarHeightSlice';
+import navbarHeightReducer from './feature/navbarState';
 
 
 const rootReducer = combineReducers({

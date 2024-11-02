@@ -15,7 +15,7 @@ export const fetchProducts = async (searchParams: URLSearchParams): Promise<IPro
     rating: searchParams.get("rating") || undefined,
     pageLimit: searchParams.get("pageLimit") || undefined,
     page: searchParams.get("page") || undefined,
-    _limit: searchParams.get("limit") || undefined,
+    limit: searchParams.get("limit") || undefined,
   };
 
   const filteredParams = new URLSearchParams(

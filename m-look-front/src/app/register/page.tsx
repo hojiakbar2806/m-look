@@ -16,7 +16,7 @@ type Success = {
   token: string;
 };
 
-export default function Login() {
+export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (data: LoginData) => LoginService(data),
     onSuccess: (data: Success) => console.log(data),
@@ -36,8 +36,13 @@ export default function Login() {
   };
 
   return (
-    <form className="w-full p-8 sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg" onSubmit={onSubmit}>
-      <h2 className="text-2xl font-bold">Login</h2>
+    <form
+      className="w-full p-8 bg-primary sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
+      onSubmit={onSubmit}
+    >
+      <h2 className="text-2xl font-bold">Register</h2>
+
+      <Input label="Fullname" type="text" name="full_name" />
 
       <Input label="Email" type="email" name="email" />
 

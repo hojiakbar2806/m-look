@@ -11,5 +11,5 @@ export interface ISearchParams {
   rating?: string;
   pageLimit?: string;
   page?: string;
-  _limit?: string;
+  limit?: string;
 }
