@@ -9,8 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 CORE = Path(__file__).resolve().parent
 
 class GlobalSettings(BaseSettings):
-    debug: bool = True
-    app_env: str = "development"
+    DEBUG: bool = True
+    APP_ENV: str = "development"
+    RUN_ON_POSTGRES: bool = False
 
     class Config:
         env_file_encoding = "utf-8"
@@ -25,50 +26,51 @@ class DBSettings(BaseSettings):
     POSTGRES_PORT: int 
     POSTGRES_USER: str 
     POSTGRES_PASSWORD: str
-    sql_db_url: str
+    SQL_DB_URL: str
 
     @property
-    def url(self) -> str:
-        if global_settings.app_env == "production":
+    def URL(self) -> str:
+        if global_settings.RUN_ON_POSTGRES:
             return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         else:
-            return f"sqlite+aiosqlite:///{str(BASE_DIR/self.sql_db_url)}"
+            return f"sqlite+aiosqlite:///{str(BASE_DIR/self.SQL_DB_URL)}"
 
     class Config:
+        env_file = "../../.env"
         env_file_encoding = "utf-8"
         extra = "ignore"
 
 class REDISSettings(BaseSettings):
-    redis_host: str
-    redis_port: int
+    REDIS_HOST: str
+    REDIS_PORT: int
 
     @property
-    def redis_url(self) -> str:
-        return f"redis://{self.redis_host}:{self.redis_port}"
+    def REDIS_URL(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
     
     class Config:
         env_file_encoding = "utf-8"
         extra = "ignore"
 
 class JWTSettings(BaseSettings):
-    rs_algorithm: str = "RS256"
-    hs_algorithm: str = "HS256"
-    private_key_path: Path = CORE / "certs" / "jwt-private.pem"
-    public_key_path: Path = CORE / "certs" / "jwt-public.pem"
-    access_token_expires_minutes: int = 30
-    refresh_token_expires_minutes: int = 60
+    RS_ALGORITHM: str = "RS256"
+    HS_ALGORITHM: str = "HS256"
+    PRIVATE_KEY_PATH: Path = CORE / "certs" / "jwt-private.pem"
+    PUBLIC_KEY_PATH: Path = CORE / "certs" / "jwt-public.pem"
+    ACCESS_TOKEN_EXPIRES_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRES_MINUTES: int = 60
 
-    secret_key:str = "f56bd6bc8efed7bad12675f761e69f36ff8f403cc471da0028b8ea6cd95bfbe9"
+    SECRET_KEY: str = "f56bd6bc8efed7bad12675f761e69f36ff8f403cc471da0028b8ea6cd95bfbe9"
 
     class Config:
         env_file_encoding = "utf-8"
         extra = "ignore"
 
 class Settings(DBSettings):
-    debug: bool = global_settings.debug
+    DEBUG: bool = global_settings.DEBUG
 
-    db: DBSettings = DBSettings()
-    jwt: JWTSettings = JWTSettings()
+    DB: DBSettings = DBSettings()
+    JWT: JWTSettings = JWTSettings()
 
     class Config:
         env_file_encoding = "utf-8"
@@ -77,9 +79,9 @@ class Settings(DBSettings):
 settings = Settings()
 
 print("---------------------")
-print(f"APP_ENV: {global_settings.app_env}")
+print(f"APP_ENV: {global_settings.APP_ENV}")
 print("---------------------")
-print(f"DEBUG: {settings.debug}")
+print(f"DEBUG: {settings.DEBUG}")
 print("---------------------")
-print(f"DB_URL: {settings.db.url}")
+print(f"DB_URL: {settings.DB.URL}")
 print("---------------------")

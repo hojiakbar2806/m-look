@@ -20,7 +20,7 @@ app = FastAPI(
     openapi_url="/api/openapi.json", 
 )
 
-@app.get("api/")
+@app.get("/api")
 async def root():
     return {"message": "It works!!!"}
 
