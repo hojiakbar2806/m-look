@@ -6,18 +6,18 @@ from fastapi.security import HTTPAuthorizationCredentials
 
 from core.config import settings
 from datetime import datetime, timedelta
-from models import User 
+from models.user import User 
 
-RS_ALGORITHM = settings.jwt.rs_algorithm
-HS_ALGORITHM = settings.jwt.hs_algorithm
+RS_ALGORITHM = settings.JWT.RS_ALGORITHM
+HS_ALGORITHM = settings.JWT.HS_ALGORITHM
 
-PRIVATE_KEY = settings.jwt.private_key_path.read_text()
-PUBLIC_KEY = settings.jwt.public_key_path.read_text()
+PRIVATE_KEY = settings.JWT.PRIVATE_KEY_PATH.read_text()
+PUBLIC_KEY = settings.JWT.PUBLIC_KEY_PATH.read_text()
 
-SECRET_KEY = settings.jwt.secret_key
+SECRET_KEY = settings.JWT.SECRET_KEY
 
-ACCESS_EXP_MIN = settings.jwt.access_token_expires_minutes
-REFRESH_EXP_MIN = settings.jwt.refresh_token_expires_minutes
+ACCESS_EXP_MIN = settings.JWT.ACCESS_TOKEN_EXPIRES_MINUTES
+REFRESH_EXP_MIN = settings.JWT.REFRESH_TOKEN_EXPIRES_MINUTES
 
 
 def encode_jwt(payload: dict, token_type: str, expires_delta: timedelta) -> str:

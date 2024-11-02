@@ -16,6 +16,7 @@ class User(Base):
     updated_at = Column(DateTime, default=None, onupdate=func.now()) 
 
     profiles = relationship("Profile", back_populates="user")
+    reviews = relationship("Review", back_populates="user")
 
     def __repr__(self):
         return f"<User {self.email}>"
