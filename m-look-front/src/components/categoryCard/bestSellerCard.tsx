@@ -33,7 +33,7 @@ const BestSellerCard = () => {
   const params = new URLSearchParams(searchParams.toString());
 
   return (
-    <div className="w-full flex flex-col gap-4 bg-gray-100 rounded-lg p-4">
+    <div className="w-full flex flex-col gap-3 bg-gray-100 rounded-lg p-4">
       <h2 className="text-xl font-medium">Best Seller</h2>
       {ct_data.map((item) => {
         const valid_query = item.name.toLocaleLowerCase().replace(" ", "_");
@@ -44,7 +44,7 @@ const BestSellerCard = () => {
             data-active={is_active}
             href={`${pathname}?${params.toString()}`}
             key={item.name}
-            className="data-[active=true]:text-primary flex items-center justify-between gap-2"
+            className="data-[active=true]:text-primary hover:text-primary flex items-center justify-between gap-2 transition-all duration-300"
           >
             <span>{item.name}</span>
             <span className=""> 1</span>

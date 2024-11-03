@@ -2,6 +2,7 @@ import { RefreshCw } from "lucide-react";
 import React from "react";
 
 const LoadMore = ({ isLoading }: { isLoading: boolean }) => {
+
   return (
     <div className="w-full flex justify-center items-center p-8">
       <button

@@ -28,7 +28,7 @@ const BestSellerProducts = async ({
   return (
     <React.Fragment>
       <ProductsWrapper view={view}>
-        {[...Array(8)].map((_, i) => {
+        {[...Array(18)].map((_, i) => {
           const productWithId = { ...product, id: i };
           return view === "grid" ? (
             <ProductGridCard key={i} product={productWithId} />

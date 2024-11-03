@@ -1,7 +1,6 @@
 "use client";
 
 import { HeartIcon, ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "src/globalReux/feature/cartSlice";
@@ -23,13 +22,7 @@ const ProductListCard = ({ product }: { product: IProduct }) => {
   return (
     <div className="group relative flex w-full flex-col  min-[600px]:flex-row gap-3 md:gap-4 rounded-lg border bg-white p-2 sm:p-3 md:p-4 hover:border-blue-200 transition-colors duration-300">
       <div className="relative aspect-[4/3] w-full sm:w-[200px] md:w-[250px] lg:w-[300px] overflow-hidden rounded-md">
-        <Image
-          src={product.img}
-          alt={product.title}
-          fill
-          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 480px) 100vw, (max-width: 768px) 200px, (max-width: 1024px) 250px, 300px"
-        />
+
       </div>
 
       <div className="flex flex-1 flex-col gap-2">
@@ -48,19 +41,7 @@ const ProductListCard = ({ product }: { product: IProduct }) => {
           <span className="text-lg sm:text-xl font-bold text-primary">
             ${product.price}
           </span>
-          {product.oldPrice && (
-            <>
-              <span className="text-sm sm:text-base text-dark/50 line-through">
-                ${product.oldPrice}
-              </span>
-              <span className="text-sm sm:text-base text-secondary">
-                {Math.round(
-                  ((product.oldPrice - product.price) / product.oldPrice) * 100
-                )}
-                % Off
-              </span>
-            </>
-          )}
+        
         </div>
 
         <div className="flex items-center gap-2 pt-2">
