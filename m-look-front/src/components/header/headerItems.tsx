@@ -6,28 +6,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/globalReux/store";
 import { Search, ShoppingCart, UserRound } from "lucide-react";
 import { openCartDialog } from "src/globalReux/feature/cartSlice";
-import { useRouter, useSearchParams } from "next/navigation";
-import useDebounce from "src/lib/useDebounce";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import useDebounce from "src/lib/useDebounce";
 
 const HeaderItems = () => {
   const [onFocus, setOnFocus] = useState(false);
   const [cartLength, setCartLength] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
   const { cart } = useSelector((state: RootState) => state.cart);
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams.toString());
+  // const searchParams = useSearchParams();
+  // const params = new URLSearchParams(searchParams.toString());
   const dispatch = useDispatch();
-  const router = useRouter();
+  // const router = useRouter();
 
-  const debouncedValue = useDebounce(searchValue, 500);
+  // const debouncedValue = useDebounce(searchValue, 500);
 
-  useEffect(() => {
-    if (debouncedValue) {
-      params.set("search", debouncedValue);
-      router.push(`/product/?${params.toString()}`);
-    }
-  }, [debouncedValue]);
+  // useEffect(() => {
+  //   if (debouncedValue) {
+  //     params.set("search", debouncedValue);
+  //     router.push(`/product/?${params.toString()}`);
+  //   }
+  // }, [debouncedValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setCartLength(cart.products.length);
@@ -70,7 +70,7 @@ const HeaderItems = () => {
             <input
               onFocus={() => setOnFocus(true)}
               onBlur={() => setOnFocus(false)}
-              onChange={(e) => setSearchValue(e.target.value)}
+              // onChange={(e) => setSearchValue(e.target.value)}
               className={`transition-all text-xs sm:text-sm md:text-lg text-dark placeholder:text-dark/50 duration-300 outline-none ${
                 onFocus ? "w-32 sm:w-60" : "w-0"
               }`}

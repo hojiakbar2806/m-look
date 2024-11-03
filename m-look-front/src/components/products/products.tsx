@@ -11,7 +11,7 @@ import ProductGridCard from "../productCard/productGridCard";
 import ProductsWrapper from "../productCard/ProductWrapper";
 import ProductListCard from "../productCard/productListCard";
 
-const Products = ({ productType, q }: { productType: string, q?: string }) => {
+const Products = ({ productType, q }: { productType: string; q?: string }) => {
   const searchParams = useSearchParams();
 
   console.log(q);

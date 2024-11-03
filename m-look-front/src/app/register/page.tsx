@@ -5,10 +5,11 @@ import Link from "next/link";
 import React from "react";
 import Input from "src/components/Input";
 
-import { LoginService } from "src/services/user.service";
+import { RegisterService } from "src/services/user.service";
 
-type LoginData = {
-  email: string;
+type RegisterData = {
+  full_name: string;
+  username: string;
   password: string;
 };
 
@@ -19,7 +20,7 @@ type Success = {
 
 export default function RegisterPage() {
   const mutation = useMutation({
-    mutationFn: (data: LoginData) => LoginService(data),
+    mutationFn: (data: RegisterData) => RegisterService(data),
     onSuccess: (data: Success) => console.log(data),
     onError: (error: Error) => console.log(error),
   });
@@ -28,8 +29,9 @@ export default function RegisterPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const data: LoginData = {
-      email: formData.get("email") as string,
+    const data: RegisterData = {
+      full_name: formData.get("full_name") as string,
+      username: formData.get("email") as string,
       password: formData.get("password") as string,
     };
 

@@ -21,11 +21,11 @@ const PriceCard: React.FC<PriceCardProps> = ({ min, max, width }) => {
   const debouncedMin = useDebounce(String(minVal), 400);
   const debouncedMax = useDebounce(String(maxVal), 400);
 
-  const updateParams = useCallback(() => {
-    params.set("min_price", String(debouncedMin));
-    params.set("max_price", String(debouncedMax));
+  useEffect(() => {
+    params.set("min_price", debouncedMin);
+    params.set("max_price", debouncedMax);
     router.push(`${pathname}?${params.toString()}`);
-  }, [debouncedMin, debouncedMax]);
+  },[debouncedMin, debouncedMax]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getPercent = useCallback(
     (value: number) => Math.round(((value - min) / (max - min)) * 100),
@@ -40,10 +40,6 @@ const PriceCard: React.FC<PriceCardProps> = ({ min, max, width }) => {
       rangeRef.current.style.width = `${maxPercent - minPercent}%`;
     }
   }, [minVal, maxVal, getPercent]);
-
-  useEffect(() => {
-    updateParams();
-  }, [debouncedMin, debouncedMax, updateParams]);
 
   return (
     <div className="w-full flex items-center justify-center flex-col space-y-6 p-4 pb-8 bg-gray-100 rounded">

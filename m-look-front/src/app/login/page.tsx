@@ -8,7 +8,7 @@ import Input from "src/components/Input";
 import { LoginService } from "src/services/user.service";
 
 type LoginData = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -29,7 +29,7 @@ export default function Login() {
     const formData = new FormData(e.currentTarget);
 
     const data: LoginData = {
-      email: formData.get("email") as string,
+      username: formData.get("email") as string,
       password: formData.get("password") as string,
     };
 
