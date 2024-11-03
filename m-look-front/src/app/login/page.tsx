@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
 import React from "react";
 import Input from "src/components/Input";
 
@@ -36,7 +37,10 @@ export default function Login() {
   };
 
   return (
-    <form className="w-full p-8 sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg" onSubmit={onSubmit}>
+    <form
+      className="w-full p-8 sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
+      onSubmit={onSubmit}
+    >
       <h2 className="text-2xl font-bold">Login</h2>
 
       <Input label="Email" type="email" name="email" />
@@ -46,6 +50,10 @@ export default function Login() {
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Login
       </button>
+
+      <Link href="/register" className="text-blue-500">
+        Register
+      </Link>
 
       {mutation.isError && (
         <p className="text-red-500">{mutation.error?.message}</p>

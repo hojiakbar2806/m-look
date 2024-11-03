@@ -8,13 +8,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/globalReux/store";
 import SizeCard from "./sizeCard";
 
-const CategoryCard = () => {
+const Category = () => {
   const navbarState = useSelector((state: RootState) => state.navbarHeight);
 
   return (
     <div
       data-state={navbarState.isTop}
-      className="category data-[state=true]:top-28 overflow-y-auto rounded-lg w-80 h-[calc(100vh-100px)] flex flex-col gap-4 top-16 sticky transition-all duration-300 py-4"
+      className="category data-[state=true]:top-28 data-[state=true]:h-[calc(100vh-150px)] h-[calc(100vh-130px)] overflow-y-auto rounded-lg w-80  flex flex-col gap-2 top-16 sticky transition-all duration-300 py-4"
     >
       <BestSellerCard />
       <ColorCard colors={["red", "blue", "green", "yellow"]} />
@@ -25,4 +25,4 @@ const CategoryCard = () => {
   );
 };
 
-export default CategoryCard;
+export default Category;

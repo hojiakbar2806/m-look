@@ -1,5 +1,5 @@
 import React from "react";
-import CategoryCard from "src/components/categoryCard/categoryCard";
+import Category from "src/components/categoryCard/category";
 import Header from "src/components/header/header";
 import Products from "src/components/products/products";
 
@@ -14,7 +14,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <div className="w-full">
       <Header />
       <div className="w-full gap-4 flex md:px-16 lg:px-24">
-        <CategoryCard />
+        <Category />
         <Products productType={productType} />
       </div>
     </div>

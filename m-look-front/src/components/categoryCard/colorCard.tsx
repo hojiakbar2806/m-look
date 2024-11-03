@@ -9,7 +9,7 @@ function ColorCard({ colors }: { colors: string[] }) {
   const router = useRouter();
 
   return (
-    <div className="rounded-lg flex gap-4 flex-col p-4 bg-gray-100">
+    <div className="rounded-lg flex gap-3 flex-col p-4 bg-gray-100">
       <h2 className="text-xl font-medium">Color</h2>
       <div className="flex gap-4 flex-wrap">
         {colors.map((color, index) => (

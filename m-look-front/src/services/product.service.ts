@@ -5,17 +5,17 @@ import { IProduct } from "src/interface/product";
 export const fetchProducts = async (searchParams: URLSearchParams): Promise<IProduct[]> => {
   const params: ISearchParams = {
     category: searchParams.get("category") || undefined,
-    minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
-    maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
-    minRating: searchParams.get("minRating") ? Number(searchParams.get("minRating")) : undefined,
-    maxRating: searchParams.get("maxRating") ? Number(searchParams.get("maxRating")) : undefined,
+    min_price: searchParams.get("min_price") || undefined,
+    max_price: searchParams.get("max_price") || undefined,
+    min_rating: searchParams.get("min_rating") || undefined,
+    max_rating: searchParams.get("max_rating") || undefined,
+    color: searchParams.get("color") || undefined,
     sortBy: (searchParams.get("sortBy") as "asc" | "desc") || undefined,
-    order: searchParams.get("order") || undefined,
     brand: searchParams.get("brand") || undefined,
-    rating: searchParams.get("rating") || undefined,
-    pageLimit: searchParams.get("pageLimit") || undefined,
+    page_size: searchParams.get("page_size") || undefined,
     page: searchParams.get("page") || undefined,
     limit: searchParams.get("limit") || undefined,
+    best_seller: searchParams.get("best_seller") || undefined,  
   };
 
   const filteredParams = new URLSearchParams(
@@ -25,7 +25,7 @@ export const fetchProducts = async (searchParams: URLSearchParams): Promise<IPro
   );
 
   const query = filteredParams.toString(); 
-  const url = `https://jsonplaceholder.typicode.com/comments${query ? `?${query}` : ""}`;
+  const url = `http://localhost:8000/api/`;
 
   try {
     const response = await fetch(url);

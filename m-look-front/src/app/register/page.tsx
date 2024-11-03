@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
 import React from "react";
 import Input from "src/components/Input";
 
@@ -37,7 +38,7 @@ export default function RegisterPage() {
 
   return (
     <form
-      className="w-full p-8 bg-primary sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
+      className="w-full p-8  sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
       onSubmit={onSubmit}
     >
       <h2 className="text-2xl font-bold">Register</h2>
@@ -51,6 +52,10 @@ export default function RegisterPage() {
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Login
       </button>
+
+      <Link href="/login" className="text-blue-500">
+        Login
+      </Link>
 
       {mutation.isError && (
         <p className="text-red-500">{mutation.error?.message}</p>

@@ -1,5 +1,6 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState, useRef } from "react";
+import useDebounce from "src/lib/useDebounce";
 
 interface PriceCardProps {
   min: number;
@@ -10,22 +11,21 @@ interface PriceCardProps {
 const PriceCard: React.FC<PriceCardProps> = ({ min, max, width }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const params = new URLSearchParams(searchParams.toString());
   const router = useRouter();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const [minVal, setMinVal] = useState<number>(min);
-  const [maxVal, setMaxVal] = useState<number>(max);
-  const minValRef = useRef<number>(min);
-  const maxValRef = useRef<number>(max);
-  const range = useRef<HTMLDivElement | null>(null);
+  const [minVal, setMinVal] = useState(min);
+  const [maxVal, setMaxVal] = useState(max);
+  const rangeRef = useRef<HTMLDivElement | null>(null);
 
-  const currencyText = "UZS";
+  const debouncedMin = useDebounce(String(minVal), 400);
+  const debouncedMax = useDebounce(String(maxVal), 400);
 
-  const onChange = (e: { min: number; max: number }) => {
-    params.set("min", e.min.toString());
-    params.set("max", e.max.toString());
+  const updateParams = useCallback(() => {
+    params.set("min_price", String(debouncedMin));
+    params.set("max_price", String(debouncedMax));
     router.push(`${pathname}?${params.toString()}`);
-  };
+  }, [debouncedMin, debouncedMax]);
 
   const getPercent = useCallback(
     (value: number) => Math.round(((value - min) / (max - min)) * 100),
@@ -34,83 +34,46 @@ const PriceCard: React.FC<PriceCardProps> = ({ min, max, width }) => {
 
   useEffect(() => {
     const minPercent = getPercent(minVal);
-    const maxPercent = getPercent(maxValRef.current);
-
-    if (range.current) {
-      range.current.style.left = `${minPercent}%`;
-      range.current.style.width = `${maxPercent - minPercent}%`;
-    }
-  }, [minVal, getPercent]);
-
-  useEffect(() => {
-    const minPercent = getPercent(minValRef.current);
     const maxPercent = getPercent(maxVal);
-
-    if (range.current) {
-      range.current.style.width = `${maxPercent - minPercent}%`;
+    if (rangeRef.current) {
+      rangeRef.current.style.left = `${minPercent}%`;
+      rangeRef.current.style.width = `${maxPercent - minPercent}%`;
     }
-  }, [maxVal, getPercent]);
+  }, [minVal, maxVal, getPercent]);
 
   useEffect(() => {
-    if (minVal !== minValRef.current || maxVal !== maxValRef.current) {
-      onChange({ min: minVal, max: maxVal });
-      console.log(`Min: ${minVal}, Max: ${maxVal}`);
-      minValRef.current = minVal;
-      maxValRef.current = maxVal;
-    }
-  }, [minVal, maxVal, onChange]);
+    updateParams();
+  }, [debouncedMin, debouncedMax, updateParams]);
 
   return (
     <div className="w-full flex items-center justify-center flex-col space-y-6 p-4 pb-8 bg-gray-100 rounded">
       <div className="w-full px-4 flex items-center justify-between gap-x-5">
-        <p className="text-lg border-dark/60 font-semibold">
-          {currencyText} {minVal}
-        </p>
-
+        <p className="text-lg border-dark/60 font-semibold">UZS {minVal}</p>
         <div className="flex-1 border-dashed border border-dark/60 mt-1"></div>
-
-        <p className="text-lg border-dark/60 font-semibold">
-          {currencyText} {maxVal}
-        </p>
+        <p className="text-lg border-dark/60 font-semibold">UZS {maxVal}</p>
       </div>
-
       <div className="multi-slide-input-container" style={{ width }}>
         <input
           type="range"
           min={min}
           max={max}
           value={minVal}
-          onChange={(event) => {
-            const value = Math.min(Number(event.target.value), maxVal - 1);
-            setMinVal(value);
-          }}
+          onChange={(e) => setMinVal(Math.min(+e.target.value, maxVal - 1))}
           className="thumb thumb-left"
-          style={{
-            width,
-            zIndex: minVal > max - 100 || minVal === maxVal ? 5 : undefined,
-          }}
+          style={{ width }}
         />
-
         <input
           type="range"
           min={min}
           max={max}
           value={maxVal}
-          onChange={(event) => {
-            const value = Math.max(Number(event.target.value), minVal + 1);
-            setMaxVal(value);
-          }}
+          onChange={(e) => setMaxVal(Math.max(+e.target.value, minVal + 1))}
           className="thumb thumb-right"
-          style={{
-            width,
-            zIndex: minVal > max - 100 || minVal === maxVal ? 4 : undefined,
-          }}
+          style={{ width }}
         />
-
         <div className="slider">
           <div className="track-slider bg-dark/10" />
-
-          <div ref={range} className="range-slider bg-primary" />
+          <div ref={rangeRef} className="range-slider bg-primary" />
         </div>
       </div>
     </div>

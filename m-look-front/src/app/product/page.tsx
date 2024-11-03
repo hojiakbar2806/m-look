@@ -13,7 +13,7 @@ export default async function Product({ searchParams }: param) {
   return (
     <div>
       <Header />
-      <div className="w-full ">
+      <div className="w-full md:px-16 lg:px-24">
         <Products productType="all" q={searchParam.searchParams} />
       </div>
     </div>
