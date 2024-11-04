@@ -9,7 +9,7 @@ import { RegisterService } from "src/services/user.service";
 
 type RegisterData = {
   full_name: string;
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -31,7 +31,7 @@ export default function RegisterPage() {
 
     const data: RegisterData = {
       full_name: formData.get("full_name") as string,
-      username: formData.get("email") as string,
+      email: formData.get("email") as string,
       password: formData.get("password") as string,
     };
 

@@ -4,8 +4,7 @@ import type { NextRequest } from "next/server";
 const protectedRoutes = ["/profile"];
 
 export function middleware(request: NextRequest) {
-  const isLoggedIn = request.cookies.get("access_token"); 
-  console.log(isLoggedIn);
+  const isLoggedIn = request.cookies.get("access_token")?.value; 
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)

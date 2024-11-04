@@ -30,7 +30,7 @@ class DBSettings(BaseSettings):
 
     @property
     def URL(self) -> str:
-        if global_settings.RUN_ON_POSTGRES:
+        if global_settings.RUN_ON_POSTGRES or global_settings.APP_ENV=="production":
             return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         else:
             return f"sqlite+aiosqlite:///{str(BASE_DIR/self.SQL_DB_URL)}"

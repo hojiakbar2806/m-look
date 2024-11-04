@@ -17,9 +17,6 @@ WORKDIR /app
 # Hamma loyihani nusxalash
 COPY . .
 
-# sharp modulini ixtiyoriy sifatida o'rnatish
-RUN npm install --include=optional sharp
-
 # Loyihani build qilish
 RUN npm run build
 

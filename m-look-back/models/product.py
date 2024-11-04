@@ -1,79 +1,97 @@
-from database.base import Base
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Float, func
-from sqlalchemy.orm import relationship
 import enum
+import sqlalchemy as sa
+from database.base import Base
+from sqlalchemy.orm import relationship
+from models.mixin import TimeStampMixin
 
-class Product(Base):
-      id = Column(Integer, primary_key=True, index=True)
-      title = Column(String(255), nullable=False)
-      description = Column(String(255), nullable=False)
-      category_id = Column(Integer, ForeignKey("categories.id"))
-      brand = Column(String(255), nullable=False)
-      stock = Column(Integer, nullable=False)
-      color = Column(String(255), nullable=False)
-      selling_count = Column(Integer, nullable=False)
-      discount = Column(Float, nullable=False)
 
-      created_at = Column(DateTime, default=func.now())
-      updated_at = Column(DateTime, default=None, onupdate=func.now())
+class Product(Base, TimeStampMixin):
+    __tablename__ = "products"
 
-      category = relationship("ProcuctCategory", back_populates="products", uselist=False)
-      reviews = relationship("ProductReview", back_populates="product", uselist=True)
-      price = relationship("ProductPrice", back_populates="product", uselist=False)
-      images = relationship("ProductImage", back_populates="product", uselist=True)
+    class GenderEnum(enum.Enum):
+        MALE = "male"
+        FEMALE = "female"
 
-      def __repr__(self):
-            return f"<Product {self.title}>"
-      
-class Category(Base):
-      id = Column(Integer, primary_key=True, index=True)
-      name = Column(String(255), nullable=False)
-      created_at = Column(DateTime, default=func.now())
-      updated_at = Column(DateTime, default=None, onupdate=func.now())
+    id = sa.Column(sa.Integer, primary_key=True)
+    title = sa.Column(sa.String(250), nullable=True)
+    description = sa.Column(sa.String(255), nullable=False)
+    stock_in = sa.Column(sa.Integer, nullable=False)
+    color = sa.Column(sa.String(255), nullable=False)
+    selling_count = sa.Column(sa.Integer, nullable=False)
+    discount = sa.Column(sa.Float, nullable=False)
+    for_whom = sa.Column(sa.Enum(GenderEnum), nullable=False)
 
-      products = relationship("Product", back_populates="category", uselist=True)
+    category_id = sa.Column(sa.ForeignKey("categories.id"))
+    price_id = sa.Column(sa.ForeignKey("product_prices.id"))
 
-      def __repr__(self):
-            return f"<Category {self.name}>"
-      
-class ProductReview(Base):
-      id = Column(Integer, primary_key=True, index=True)
-      rating = Column(Float, nullable=False)
-      comment = Column(String(255), nullable=False)
-      avarage_rating = Column(Float, nullable=False)
+    category = relationship("ProductCategory", back_populates="products")
+    review = relationship("ProductReview", back_populates="product")
+    price = relationship("ProductPrice", back_populates="product")
+    images = relationship("ProductImage", back_populates="product")
 
-      product_id = Column(Integer, ForeignKey("products.id"))
-      user_id = Column(Integer, ForeignKey("users.id"))
+    def __repr__(self):
+        return f"<Product {self.id}>"
 
-      user = relationship("User", back_populates="reviews")
-      product = relationship("Product", back_populates="reviews")
 
-      def __repr__(self):
-            return f"<ProductReview {self.rating}>"
-      
-class ProductPrice(Base):
-      class CurrencyEnum(str, enum.Enum):
-            UZS = "UZS"
-            USD = "USD"
-            EUR = "EUR"
+class ProductCategory(Base, TimeStampMixin):
+    __tablename__ = "categories"
 
-      id = Column(Integer, primary_key=True, index=True)
-      amount = Column(Float, nullable=False)
-      currency = Column(enum.Enum(CurrencyEnum),default=CurrencyEnum.USD, nullable=False)
+    id = sa.Column(sa.Integer, primary_key=True)
+    name = sa.Column(sa.String(200), nullable=False)
 
-      product = relationship("Product", back_populates="price")
+    products = relationship("Product", back_populates="category")
 
-      def __repr__(self):
-            return f"<ProductPrice {self.amount} {self.currency}>"
-      
+    def __repr__(self):
+        return f"<ProductCategory {self.id}>"
+
+
+class ProductPrice(Base, TimeStampMixin):
+    __tablename__ = "product_prices"
+
+    class CurrencyEnum(str, enum.Enum):
+        UZS = "UZS"
+        USD = "USD"
+        EUR = "EUR"
+        RUB = "RUB"
+
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    current_amount = sa.Column(sa.Float, nullable=True)
+    currency = sa.Column(sa.Enum(CurrencyEnum),
+                         default=CurrencyEnum.UZS, nullable=False)
+    old_amount = sa.Column(sa.Float, nullable=True)
+
+    product = relationship("Product", back_populates="price")
+
+    def __repr__(self):
+        return f"<ProductPrice {self.id}>"
+
+
+class ProductReview(Base, TimeStampMixin):
+    __tablename__ = "product_reviews"
+
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    rating = sa.Column(sa.Float, nullable=False)
+    comment = sa.Column(sa.String(255), nullable=False)
+    average_rating = sa.Column(sa.Float, nullable=False)
+
+    product_id = sa.Column(sa.ForeignKey("products.id"))
+    user_id = sa.Column(sa.ForeignKey("users.id"))
+
+    product = relationship("Product", back_populates="review")
+    user = relationship("User", back_populates="reviews")
+
+    def __repr__(self):
+        return f"<ProductReview {self.id}>"
+
 
 class ProductImage(Base):
-      id = Column(Integer, primary_key=True, index=True)
-      img_url = Column(String, nullable=False)
-      product_id = Column(Integer, ForeignKey("products.id"))
+    __tablename__ = "product_images"
 
-      product = relationship("Product", back_populates="images")
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    img_url = sa.Column(sa.String, nullable=False)
+    product_id = sa.Column(sa.Integer, sa.ForeignKey("products.id"))
 
-      def __repr__(self):
-            return f"<ProductImage {self.id}>"
+    product = relationship("Product", back_populates="images")
 
+    def __repr__(self):
+        return f"<ProductImage {self.id}>"

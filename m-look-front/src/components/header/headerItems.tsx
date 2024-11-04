@@ -1,33 +1,61 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import LanguageDropdown from "./langDropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/globalReux/store";
 import { Search, ShoppingCart, UserRound } from "lucide-react";
 import { openCartDialog } from "src/globalReux/feature/cartSlice";
-// import { useRouter, useSearchParams } from "next/navigation";
-// import useDebounce from "src/lib/useDebounce";
+import { useRouter, useSearchParams } from "next/navigation";
+import useDebounce from "src/lib/useDebounce";
+
+function SearchBar() {
+  const searchParams = useSearchParams();
+  const [onFocus, setOnFocus] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const params = new URLSearchParams(searchParams.toString());
+  const router = useRouter();
+
+  const debouncedValue = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      params.set("search", debouncedValue);
+      router.push(`/product/?${params.toString()}`);
+    }
+  }, [debouncedValue]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <label
+      htmlFor="search-header"
+      className={`relative items-center flex p-1 border rounded-md ${
+        onFocus ? "border-blue-500" : "botext-dark  border-transparent"
+      }`}
+    >
+      <input
+        onFocus={() => setOnFocus(true)}
+        onBlur={() => setOnFocus(false)}
+        onChange={(e) => setSearchValue(e.target.value)}
+        className={`transition-all text-xs sm:text-sm md:text-lg text-dark placeholder:text-dark/50 duration-300 outline-none ${
+          onFocus ? "w-32 sm:w-60" : "w-0"
+        }`}
+        placeholder="Search..."
+        type="text"
+        id="search-header"
+      />
+      <Search
+        className="cursor-pointer text-dark  size-4 md:size-6"
+        strokeWidth={2.75}
+      />
+    </label>
+  );
+}
 
 const HeaderItems = () => {
-  const [onFocus, setOnFocus] = useState(false);
   const [cartLength, setCartLength] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  // const [searchValue, setSearchValue] = useState("");
   const { cart } = useSelector((state: RootState) => state.cart);
-  // const searchParams = useSearchParams();
-  // const params = new URLSearchParams(searchParams.toString());
   const dispatch = useDispatch();
-  // const router = useRouter();
-
-  // const debouncedValue = useDebounce(searchValue, 500);
-
-  // useEffect(() => {
-  //   if (debouncedValue) {
-  //     params.set("search", debouncedValue);
-  //     router.push(`/product/?${params.toString()}`);
-  //   }
-  // }, [debouncedValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setCartLength(cart.products.length);
@@ -61,28 +89,9 @@ const HeaderItems = () => {
         </li>
 
         <li className="flex items-center">
-          <label
-            htmlFor="search-header"
-            className={`relative items-center flex p-1 border rounded-md ${
-              onFocus ? "border-blue-500" : "botext-dark  border-transparent"
-            }`}
-          >
-            <input
-              onFocus={() => setOnFocus(true)}
-              onBlur={() => setOnFocus(false)}
-              // onChange={(e) => setSearchValue(e.target.value)}
-              className={`transition-all text-xs sm:text-sm md:text-lg text-dark placeholder:text-dark/50 duration-300 outline-none ${
-                onFocus ? "w-32 sm:w-60" : "w-0"
-              }`}
-              placeholder="Search..."
-              type="text"
-              id="search-header"
-            />
-            <Search
-              className="cursor-pointer text-dark  size-4 md:size-6"
-              strokeWidth={2.75}
-            />
-          </label>
+          <Suspense>
+            <SearchBar />
+          </Suspense>
         </li>
       </ul>
     </div>

@@ -28,6 +28,9 @@ const ProductGridCard = ({ product }: { product: IProduct }) => {
     <div className="group relative overflow-hidden border rounded-lg shadow-md flex flex-col items-center">
       <figure className="w-full relative">
         <Image
+          onError={(e) => {
+            console.error("Error loading image:", e);
+          }}
           src={product.img}
           width={500}
           height={350}

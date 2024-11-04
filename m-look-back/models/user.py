@@ -1,38 +1,43 @@
-from database.base import Base
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, Text, DateTime, Enum, Boolean, LargeBinary,func
 import enum
+import sqlalchemy as sa
+from database.base import Base
+from models.mixin import TimeStampMixin
+from sqlalchemy.orm import relationship
 
-class User(Base):
+
+class User(Base, TimeStampMixin):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String(255))
-    email = Column(String(255), unique=True, index=True)
-    hashed_password = Column(LargeBinary, nullable=False)
-    is_active = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=func.now()) 
-    last_login = Column(DateTime, default=func.now()) 
-    updated_at = Column(DateTime, default=None, onupdate=func.now()) 
+    class RoleEnum(enum.Enum):
+        USER = "user"
+        ADMIN = "admin"
+        OWNER = "owner"
+        MODERATOR = "moderator"
 
-    profiles = relationship("Profile", back_populates="user")
-    reviews = relationship("Review", back_populates="user")
+    id = sa.Column(sa.Integer, primary_key=True)
+    full_name = sa.Column(sa.String(250), nullable=False)
+    email = sa.Column(sa.String(200), nullable=False, index=True)
+    hashed_password = sa.Column(sa.LargeBinary, nullable=False)
+    is_active = sa.Column(sa.Boolean, default=False, nullable=False)
+    last_login = sa.Column(sa.DateTime, default=sa.func.now())
+    role = sa.Column(sa.Enum(RoleEnum), default=RoleEnum.USER, nullable=False)
 
-    def __repr__(self):
-        return f"<User {self.email}>"
+    profile = relationship("Profile", back_populates="user", uselist=False)
+    reviews = relationship("ProductReview", back_populates="user")
 
-class Profile(Base):
+
+class Profile(Base, TimeStampMixin):
     __tablename__ = "profiles"
 
-    class GenderEnum(str, enum.Enum):
-        male = "male"
-        female = "female"
+    class GenderEnum(enum.Enum):
+        MALE = "male"
+        FEMALE = "female"
 
-    id = Column(Integer, primary_key=True, index=True)
-    gender = Column(Enum(GenderEnum), nullable=False)  
-    birth_date = Column(Date, nullable=False)  
-    profile_pic = Column(String(255), nullable=False)
-    bio = Column(Text, nullable=False)
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    gender = sa.Column(sa.Enum(GenderEnum), nullable=True)
+    birth_date = sa.Column(sa.Date, nullable=True)
+    profile_pic = sa.Column(sa.String, nullable=True)
+    bio = sa.Column(sa.Text, nullable=True)
 
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="profiles")
+    user_id = sa.Column(sa.ForeignKey("users.id"))
+    user = relationship("User", back_populates="profile", uselist=False)
