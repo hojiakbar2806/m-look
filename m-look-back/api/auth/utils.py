@@ -1,11 +1,12 @@
 from models.user import User
 from api.auth import schemas
-from utils import check_password
 from fastapi import HTTPException
 from sqlalchemy.future import select
 from database.session import get_async_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.security.hashing import check_password
 
 
 async def validate_get_user(username: str, password: str, session: AsyncSession) -> User:

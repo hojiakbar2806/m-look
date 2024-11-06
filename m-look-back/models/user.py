@@ -1,5 +1,5 @@
-import enum
 import sqlalchemy as sa
+from core.enums import GenderEnum, RoleEnum
 from database.base import Base
 from models.mixin import TimeStampMixin
 from sqlalchemy.orm import relationship
@@ -7,12 +7,6 @@ from sqlalchemy.orm import relationship
 
 class User(Base, TimeStampMixin):
     __tablename__ = "users"
-
-    class RoleEnum(enum.Enum):
-        USER = "user"
-        ADMIN = "admin"
-        OWNER = "owner"
-        MODERATOR = "moderator"
 
     id = sa.Column(sa.Integer, primary_key=True)
     full_name = sa.Column(sa.String(250), nullable=False)
@@ -28,10 +22,6 @@ class User(Base, TimeStampMixin):
 
 class Profile(Base, TimeStampMixin):
     __tablename__ = "profiles"
-
-    class GenderEnum(enum.Enum):
-        MALE = "male"
-        FEMALE = "female"
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
     gender = sa.Column(sa.Enum(GenderEnum), nullable=True)

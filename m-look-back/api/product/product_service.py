@@ -1,37 +1,37 @@
-from typing import Optional, List
-from sqlalchemy import asc, desc
-from sqlalchemy.future import select
+from typing import List, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-
-from api.base_crud import CRUDBase
+from sqlalchemy import select, asc, desc
+from api.product.schemas import ProductFilters
 from models.product import Product
+from api.base_crud import CRUDBase
+
 
 class ProductService(CRUDBase):
-      async def get_all(self, db: AsyncSession, category: Optional[str] = None, 
-                        minPrice: Optional[float] = None, maxPrice: Optional[float] = None, 
-                        minRating: Optional[float] = None, maxRating: Optional[float] = None,
-                        sortBy: Optional[str] = None, order: Optional[str] = "asc", brand: Optional[str] = None, 
-                        rating: Optional[str] = None, pageLimit: Optional[int] = 10,page: Optional[int] = 1) -> List[Product]:
-            
-            query = select(self.model)
+    async def get_all(self, db: AsyncSession, filters: ProductFilters) -> List[Product]:
+        query = select(self.model)
 
-            if category: query = query.where(self.model.category == category)
-            if minPrice is not None: query = query.where(self.model.price >= minPrice)
-            if maxPrice is not None:  query = query.where(self.model.price <= maxPrice)
-            if minRating is not None: query = query.where(self.model.rating >= minRating)
-            if maxRating is not None: query = query.where(self.model.rating <= maxRating)
-            if brand: query = query.where(self.model.brand == brand)
-            if rating: query = query.where(self.model.rating == rating)
-            if sortBy: order_func = asc if order == "asc" else desc
+        if filters.category:
+            query = query.where(self.model.category == filters.category)
+        if filters.min_price is not None:
+            query = query.where(self.model.price >= filters.min_price)
+        if filters.max_price is not None:
+            query = query.where(self.model.price <= filters.max_price)
+        if filters.min_rating is not None:
+            query = query.where(self.model.rating >= filters.min_rating)
+        if filters.max_rating is not None:
+            query = query.where(self.model.rating <= filters.max_rating)
+        if filters.brand:
+            query = query.where(self.model.brand == filters.brand)
+        if filters.rating is not None:
+            query = query.where(self.model.rating == filters.rating)
 
-            if page and pageLimit: offset = (page - 1) * pageLimit
-            query = query.limit(pageLimit).offset(offset)
-            query = query.order_by(order_func(getattr(self.model, sortBy)))
+        if filters.sort_by:
+            order_func = asc if filters.order == "asc" else desc
+            query = query.order_by(order_func(
+                getattr(self.model, filters.sort_by)))
 
-            result = await db.execute(query)
-            return result.scalars().all()
-      
+        offset = (filters.page - 1) * filters.page_limit
+        query = query.limit(filters.page_limit).offset(offset)
 
-
-product_service = ProductService(Product,model=Product, schema=Product)
+        result = await db.execute(query)
+        return result.scalars().all()

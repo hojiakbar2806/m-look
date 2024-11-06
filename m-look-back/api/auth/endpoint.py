@@ -1,22 +1,18 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status, Cookie
 
 from api.auth import schemas
+from core.dependency import get_current_user
+from core.enums import TokenType
+from core.security.jwt import create_refresh_token, decode_activation_token, generate_activation_token
 from models.user import User
 from core.config import settings
-from utils.hashing import hash_password
-from core.dependency import get_auth_user
+from core.security.hashing import hash_password
 from database.session import get_async_session
 from api.auth.dependency import ensure_username, get_validated_user
-from core.security import (
-    create_access_token,
-    create_refresh_token,
-    generate_activation_token,
-    verify_activation_token,
-    verify_user,
-)
+from core.security.utils import create_access_token, verify_user_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -28,18 +24,18 @@ async def register_user(
 ):
     user.hashed_password = hash_password(user.hashed_password)
     new_user = User(**user.dict())
+    token = generate_activation_token(new_user.email)
 
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
 
-    token = generate_activation_token(new_user.email)
     return {"token": token}
 
 
 @router.post("/activate/{token}", status_code=status.HTTP_200_OK)
-async def activate_user(token: str, session: AsyncSession = Depends(get_async_session)):
-    email = verify_activation_token(token)
+async def activate_user(response: Response, token: str, session: AsyncSession = Depends(get_async_session)):
+    email = decode_activation_token(token).get("sub")
     stmt = select(User).where(User.email == email)
     user = (await session.execute(stmt)).scalar_one_or_none()
     if user is None:
@@ -47,39 +43,62 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
     user.is_active = True
     await session.commit()
 
-    acces_token = create_access_token(email)
+    access_token = create_access_token(email)
     refresh_token = create_refresh_token(email)
-    return schemas.Token(access_token=acces_token, refresh_token=refresh_token)
+
+    expires = datetime.utcnow() + timedelta(days=30)
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        max_age=30 * 24 * 60 * 60,
+        expires=int(expires.timestamp()),
+        httponly=True,
+        secure=False,
+        samesite='lax'
+    )
+    return schemas.TokenResponse(access_token=access_token, message="Account verified", status="success")
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login_user(response: Response, user: User = Depends(get_validated_user)):
-    access_token = create_access_token(user.id)
-    refresh_token = create_refresh_token(user.id)
+    access_token = create_access_token(user.email)
+    refresh_token = create_refresh_token(user.email)
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        expires=int(
-            timedelta(settings.JWT.ACCESS_TOKEN_EXPIRES_MINUTES).total_seconds()),
-        secure=False,
-        samesite="none",
-        httponly=False,
-    )
+    expires = datetime.utcnow() + timedelta(days=30)
+
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
-        expires=int(
-            timedelta(settings.JWT.REFRESH_TOKEN_EXPIRES_MINUTES).total_seconds()
-        ),
-        secure=False,
-        samesite="none",
+        max_age=30 * 24 * 60 * 60,
+        expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         httponly=False,
+        secure=False,
+        samesite='lax'
     )
+    return schemas.TokenResponse(access_token=access_token, message="Login successfully", status="success")
 
-    return {"message": "Login successful"}
+
+def verify_access_token(request: Request):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(
+            status_code=401, detail="Foydalanuvchi tizimga kirmagan")
+    return access_token
 
 
 @router.get("/me")
-async def get_me(user: User = Depends(get_auth_user)):
-    return user
+async def get_me(current_user: User = Depends(get_current_user)):
+    return {current_user}
+
+
+@router.post("/refresh-token")
+async def refresh_session(refresh_token: str = Cookie(None), session: AsyncSession = Depends(get_async_session)):
+    if not refresh_token:
+        raise HTTPException(
+            status_code=400, detail="Refresh token not provided"
+        )
+    user = await verify_user_token(refresh_token, session, TokenType.REFRESH)
+    access_token = create_access_token(email=user.email)
+
+    return schemas.TokenResponse(access_token=access_token, message="Access token successfully refreshed", status="success")

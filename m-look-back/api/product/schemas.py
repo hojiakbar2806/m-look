@@ -1,46 +1,55 @@
-import datetime
-from pydantic import BaseModel, Field
-from typing import List
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+from core.enums import GenderEnum
 
 
-class ProductInSchema(BaseModel):
-      name: str = Field(..., min_length=3, max_length=100)
-      category: str = Field(..., min_length=3, max_length=100)
-      price: float = Field(..., ge=0)
-      brand: str = Field(..., min_length=3, max_length=100)
-      rating: float = Field(..., ge=0, le=5)
-      description: str = Field(..., min_length=3, max_length=255)
-      img: str = Field(..., min_length=3, max_length=255)   
+class ProductBase(BaseModel):
+    title: Optional[str] = None
+    description: str
+    stock_in: int
+    color: str
+    selling_count: int
+    discount: float
+    for_whom: GenderEnum
+    category_id: Optional[int]
+    price_id: Optional[int]
 
-class ProductOutSchema(BaseModel):
-      id: int
-      name: str
-      category: str
-      price: float
-      brand: str
-      rating: float
-      description: str
-      img: str
-      created_at: datetime    
-      updated_at: datetime    
+    class Config:
+        orm_mode = True
 
 
-class ProductsOutSchema(BaseModel):
-      products: List[ProductOutSchema]
-      total: int
-      page: int
-      page_limit: int
-
-      class Config:
-            from_attributes = True
+class ProductRead(ProductBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime]
 
 
-class ProductUpdateSchema(BaseModel):
-      name: str = Field(..., min_length=3, max_length=100)
-      category: str = Field(..., min_length=3, max_length=100)
-      price: float = Field(..., ge=0)
-      brand: str = Field(..., min_length=3, max_length=100)
-      rating: float = Field(..., ge=0, le=5)
-      description: str = Field(..., min_length=3, max_length=255)
+class ProductCreate(ProductBase):
+    pass
 
-      
+
+class ProductUpdate(ProductBase):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    stock_in: Optional[int] = None
+    color: Optional[str] = None
+    selling_count: Optional[int] = None
+    discount: Optional[float] = None
+    for_whom: Optional[GenderEnum] = None
+    category_id: Optional[int] = None
+    price_id: Optional[int] = None
+
+
+class ProductFilters(BaseModel):
+    category: Optional[str] = None
+    min_price: Optional[float] = None
+    max_price: Optional[float] = None
+    min_rating: Optional[float] = None
+    max_rating: Optional[float] = None
+    brand: Optional[str] = None
+    rating: Optional[float] = None
+    sort_by: Optional[str] = None
+    order: Optional[str] = "asc"
+    page_limit: Optional[int] = 10
+    page: Optional[int] = 1

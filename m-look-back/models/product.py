@@ -1,5 +1,5 @@
-import enum
 import sqlalchemy as sa
+from core.enums import CurrencyEnum, GenderEnum
 from database.base import Base
 from sqlalchemy.orm import relationship
 from models.mixin import TimeStampMixin
@@ -7,10 +7,6 @@ from models.mixin import TimeStampMixin
 
 class Product(Base, TimeStampMixin):
     __tablename__ = "products"
-
-    class GenderEnum(enum.Enum):
-        MALE = "male"
-        FEMALE = "female"
 
     id = sa.Column(sa.Integer, primary_key=True)
     title = sa.Column(sa.String(250), nullable=True)
@@ -47,12 +43,6 @@ class ProductCategory(Base, TimeStampMixin):
 
 class ProductPrice(Base, TimeStampMixin):
     __tablename__ = "product_prices"
-
-    class CurrencyEnum(str, enum.Enum):
-        UZS = "UZS"
-        USD = "USD"
-        EUR = "EUR"
-        RUB = "RUB"
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
     current_amount = sa.Column(sa.Float, nullable=True)

@@ -13,4 +13,4 @@ async def ensure_username(user: schemas.UserInSchema, session: AsyncSession = De
 
 
 async def get_validated_user(user: schemas.LoginSchema, session: AsyncSession = Depends(get_async_session)):
-    return await utils.validate_get_user(user.username, user.password, session)
+    return await utils.validate_get_user(user.email, user.password, session)
