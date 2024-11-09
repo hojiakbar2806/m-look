@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.user import User
 from core.enums import TokenType
-from core.security.jwt import create_access_token, decode_jwt
+from core.security.jwt import decode_jwt
 
 
 async def verify_user_token(token: str, session: AsyncSession, token_type: TokenType) -> User:

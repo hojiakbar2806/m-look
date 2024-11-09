@@ -1,17 +1,18 @@
-from typing import List, Dict, Any
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, asc, desc
+from sqlalchemy.orm import selectinload
+from sqlalchemy.sql import select, asc, desc
 from api.product.schemas import ProductFilters
 from models.product import Product
 from api.base_crud import CRUDBase
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
 
 
 class ProductService(CRUDBase):
-    async def get_all(self, db: AsyncSession, filters: ProductFilters) -> List[Product]:
+    async def get_multi(self, db: AsyncSession, filters: ProductFilters) -> List[Product]:
         query = select(self.model)
 
         if filters.category:
-            query = query.where(self.model.category == filters.category)
+            query = query.where(self.model.category.has(name=filters.category))
         if filters.min_price is not None:
             query = query.where(self.model.price >= filters.min_price)
         if filters.max_price is not None:

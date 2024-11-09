@@ -46,8 +46,7 @@ class ProductPrice(Base, TimeStampMixin):
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
     current_amount = sa.Column(sa.Float, nullable=True)
-    currency = sa.Column(sa.Enum(CurrencyEnum),
-                         default=CurrencyEnum.UZS, nullable=False)
+    currency = sa.Column(sa.Enum(CurrencyEnum),default=CurrencyEnum.UZS, nullable=False)
     old_amount = sa.Column(sa.Float, nullable=True)
 
     product = relationship("Product", back_populates="price")

@@ -2,7 +2,8 @@ import "src/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import ReduxProvider from "src/providers/reduxProvider";
-import CartDialog from "src/components/cartDialog/cartDialog";
+import { Toaster } from "sonner";
+import CartDialog from "src/components/store/cartDialog/cartDialog";
 import ReactQueryProvider from "src/providers/reactQueryProvider";
 
 const poppins = localFont({
@@ -29,6 +30,7 @@ export default function RootLayout({
             </main>
           </ReactQueryProvider>
           <CartDialog />
+          <Toaster position="bottom-right" richColors />
         </ReduxProvider>
       </body>
     </html>

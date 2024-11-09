@@ -2,7 +2,6 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from core.security.jwt import create_access_token
 from core.security.utils import verify_user_token
 from database.session import get_async_session
 from models.user import User

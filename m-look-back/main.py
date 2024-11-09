@@ -15,11 +15,11 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="FastAPI",
-    description="FastAPI",
     version="1.0.0",
+    title="FastAPI",
     lifespan=lifespan,
     docs_url="/api/docs",  
+    description="FastAPI",
     redoc_url="/api/redoc",  
     openapi_url="/api/openapi.json", 
 )

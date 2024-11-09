@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from core.enums import GenderEnum
+from core.enums import CurrencyEnum, GenderEnum
 
 
 class ProductBase(BaseModel):
@@ -19,14 +19,21 @@ class ProductBase(BaseModel):
         orm_mode = True
 
 
-class ProductRead(ProductBase):
-    id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
+class ProductPrice(BaseModel):
+    amount: int
+    currency: CurrencyEnum
 
 
-class ProductCreate(ProductBase):
-    pass
+class ProductIn(BaseModel):
+    title: Optional[str] = None
+    description: str
+    stock_in: int
+    color: str
+    selling_count: int
+    discount: float
+    for_whom: GenderEnum
+    category_id: Optional[int]
+    price: ProductPrice
 
 
 class ProductUpdate(ProductBase):
@@ -42,7 +49,7 @@ class ProductUpdate(ProductBase):
 
 
 class ProductFilters(BaseModel):
-    category: Optional[str] = None
+    category: str
     min_price: Optional[float] = None
     max_price: Optional[float] = None
     min_rating: Optional[float] = None
