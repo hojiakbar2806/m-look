@@ -73,7 +73,7 @@ const HeartButton = ({ product }: ProductCardProps) => {
 
   useEffect(() => {
     setIsClient(true);
-  },[]);
+  }, []);
 
   if (!isClient) return null;
 
@@ -86,8 +86,11 @@ const HeartButton = ({ product }: ProductCardProps) => {
       }}
     >
       <Heart
-        className="text-secondary size-4 sm:size-5 md:size-7"
-        fill={hasInList ? "red" : "transparent"}
+        className={`${
+          hasInList
+            ? "stroke-secondary fill-secondary"
+            : "stroke-white/60 fill-transparent"
+        }  size-4 sm:size-5 md:size-7  active:scale-125 transition-all duration-300`}
       />
     </button>
   );

@@ -83,7 +83,7 @@ const ProductBar: React.FC<ProductBarProps> = ({ productLength }) => {
           </span>
           <ul
             data-open={open}
-            className="data-[open=true]:opacity-100 data-[open=true]:top-8 opacity-0 w-auto overflow-hidden absolute top-12 rounded-md flex flex-col  bg-white shadow-md transition-all duration-300"
+            className="data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto pointer-events-none data-[open=true]:top-8 opacity-0 w-auto overflow-hidden absolute top-12 rounded-md flex flex-col  bg-white shadow-md transition-all duration-300"
           >
             {sortBy.map((item) => {
               const is_active = params.get("sort") === item.value;

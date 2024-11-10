@@ -9,9 +9,6 @@ const apiAgent = axios.create({
 
 apiAgent.interceptors.request.use(
   async (config) => {
-    const accessToken = "";
-    console.log(accessToken);
-
     return config;
   },
   async (error) => {
@@ -27,8 +24,8 @@ apiAgent.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response.data) {
-      error.response.data?.detail.forEach(
+    if (error.response?.status === 422 && error.response?.data?.detail) {
+      error.response.data.detail.forEach(
         (err: { loc: string[]; msg: string }) => {
           const field = err.loc[1];
           const message = err.msg.split(":")[0];
@@ -36,8 +33,9 @@ apiAgent.interceptors.response.use(
           toast.error(`${formattedField}: ${message}`);
         }
       );
+    } else if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
     }
-
     return Promise.reject(error);
   }
 );

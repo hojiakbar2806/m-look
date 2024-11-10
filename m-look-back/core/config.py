@@ -56,7 +56,7 @@ class JWTSettings(BaseSettings):
     ALGORITHM: str = "RS256"
     PRIVATE_KEY_PATH: Path = CORE / "certs" / "jwt-private.pem"
     PUBLIC_KEY_PATH: Path = CORE / "certs" / "jwt-public.pem"
-    ACCESS_TOKEN_EXPIRES_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRES_MINUTES: float = 1
     REFRESH_TOKEN_EXPIRES_MINUTES: int = 60
     ACTIVATION_TOKEN_EXPIRES_MINUTS: int = 5
 

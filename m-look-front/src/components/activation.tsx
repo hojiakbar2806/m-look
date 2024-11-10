@@ -36,10 +36,10 @@ const ActivationComp: React.FC<ActivationCompProps> = ({ token }) => {
             Your account is now active. You may proceed to login.
           </p>
           <button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/")}
             className="px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-all duration-300"
           >
-            Go to Login
+            Back to home
           </button>
         </div>
       ) : (

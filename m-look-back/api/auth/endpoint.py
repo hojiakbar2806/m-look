@@ -104,7 +104,7 @@ async def get_me(current_user: User = Depends(get_current_user)):
 async def refresh_session(refresh_token: str = Cookie(None), session: AsyncSession = Depends(get_async_session)):
     if not refresh_token:
         raise HTTPException(
-            status_code=400, detail="Refresh token not provided"
+            status_code=400, detail="You are not registered"
         )
     user = await verify_user_token(refresh_token, session, TokenType.REFRESH)
     access_token = jwt.create_access_token(email=user.email)

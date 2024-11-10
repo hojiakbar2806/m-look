@@ -1,18 +1,9 @@
-"use client"
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
 import React from "react";
-import { LogOutService } from "src/services/auth.service";
+import { useAuthStore } from "src/store/authStore";
 
 export default function LogoutButton() {
-  const queryClient = useQueryClient();
+  const { logout } = useAuthStore();
 
-  const mutation = useMutation({
-    mutationFn: () => LogOutService(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["session"] });
-    },
-  });
-
-  return <button onClick={() => mutation.mutate()}>LOGOUT</button>;
+  return <button onClick={async () => await logout()}>LOGOUT</button>;
 }
