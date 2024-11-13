@@ -5,6 +5,7 @@ from fastapi.concurrency import asynccontextmanager
 
 from api.auth import auth_router
 from api.product import product_router
+from api.user import user_router
 
 
 @asynccontextmanager
@@ -18,10 +19,10 @@ app = FastAPI(
     version="1.0.0",
     title="FastAPI",
     lifespan=lifespan,
-    docs_url="/api/docs",  
+    docs_url="/api/docs",
     description="FastAPI",
-    redoc_url="/api/redoc",  
-    openapi_url="/api/openapi.json", 
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
 )
 
 
@@ -31,13 +32,18 @@ async def debug_cookies(request: Request, call_next):
     response = await call_next(request)
     return response
 
+origins = [
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Origin", "X-Requested-With", "Content-Type", "Accept"],
 )
+
 
 @app.get("/api")
 async def root():
@@ -45,3 +51,4 @@ async def root():
 
 app.include_router(auth_router, prefix="/api")
 app.include_router(product_router, prefix="/api")
+app.include_router(user_router, prefix="/api")

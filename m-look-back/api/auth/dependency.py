@@ -8,9 +8,9 @@ from database.session import get_async_session
 
 http_bearer = HTTPBearer()
 
-async def ensure_username(user: schemas.UserInSchema, session: AsyncSession = Depends(get_async_session)):
-    return await utils.exist_email(user, session)
+async def valid_user(user:schemas.Register, session: AsyncSession = Depends(get_async_session)):
+    return await utils.is_exist_user(user, session)
 
 
-async def get_validated_user(user: schemas.LoginSchema, session: AsyncSession = Depends(get_async_session)):
-    return await utils.validate_get_user(user.email, user.password, session)
+async def get_verified_user(user: schemas.LoginSchema, session: AsyncSession = Depends(get_async_session)):
+    return await utils.verify_user(user.username, user.password, session)

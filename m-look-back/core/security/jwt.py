@@ -40,14 +40,14 @@ def decode_jwt(token: str) -> dict:
         )
 
 
-def create_access_token(email: str) -> str:
-    jwt_payload = {"sub": email}
+def create_access_token(sub: str) -> str:
+    jwt_payload = {"sub": sub}
     expires_delta = timedelta(minutes=ACCESS_EXP_MIN)
     return encode_jwt(jwt_payload, "access", expires_delta)
 
 
-def create_refresh_token(email: str) -> str:
-    jwt_payload = {"sub": email}
+def create_refresh_token(sub: str) -> str:
+    jwt_payload = {"sub": sub}
     expires_delta = timedelta(minutes=REFRESH_EXP_MIN)
     return encode_jwt(jwt_payload, "refresh", expires_delta)
 

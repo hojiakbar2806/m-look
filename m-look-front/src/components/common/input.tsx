@@ -37,7 +37,7 @@ const Input: React.FC<InputProps> = React.memo(
         />
         <span
           className={clx(
-            "absolute  peer-focus:top-0 left-3 -translate-y-1/2 text-gray-500 transition-all duration-200",
+            "bg-white absolute  peer-focus:top-0 left-3 -translate-y-1/2 text-gray-500 transition-all duration-200",
             value ? "text-primary top-0" : " top-1/2"
           )}
         >

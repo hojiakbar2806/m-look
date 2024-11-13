@@ -10,13 +10,15 @@ class User(Base, TimeStampMixin):
 
     id = sa.Column(sa.Integer, primary_key=True)
     full_name = sa.Column(sa.String(250), nullable=False)
-    email = sa.Column(sa.String(200), nullable=False, index=True)
+    username = sa.Column(sa.String(250), nullable=False, index=True)
+    phone_number = sa.Column(sa.String, nullable=False)
+    email = sa.Column(sa.String(200), nullable=False)
     hashed_password = sa.Column(sa.LargeBinary, nullable=False)
     is_active = sa.Column(sa.Boolean, default=False, nullable=False)
     last_login = sa.Column(sa.DateTime, default=sa.func.now())
-    role = sa.Column(sa.Enum(RoleEnum), default=RoleEnum.USER, nullable=False)
+    role = sa.Column(sa.Enum(RoleEnum),default=RoleEnum.USER, nullable=False)
 
-    profile = relationship("Profile", back_populates="user", uselist=False)
+    profile = relationship("Profile", back_populates="user")
     reviews = relationship("ProductReview", back_populates="user")
 
 

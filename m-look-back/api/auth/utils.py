@@ -1,34 +1,34 @@
 from models.user import User
-from api.auth import schemas
 from fastapi import HTTPException
 from sqlalchemy.future import select
-from database.session import get_async_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.security.hashing import check_password
 
 
-async def validate_get_user(username: str, password: str, session: AsyncSession) -> User:
-    un_auth_exception = HTTPException(
-        status_code=401,
-        detail="Email nomi yoki parol noto'g'ri",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+async def verify_user(username: str, password: str, session: AsyncSession) -> User:
+    stmt = select(User)
+    query = stmt.where(User.username == username)
+    result = await session.execute(query)
+    user = result.scalar_one_or_none()
 
-    stmt = select(User).where(User.email == username)
-    user = (await session.execute(stmt)).scalar_one_or_none()
-
-    if user is None or not check_password(password, user.hashed_password):
-        raise un_auth_exception
-
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    valid_password = check_password(password, user.hashed_password)
+    if not valid_password:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     return user
 
 
-async def exist_email(user: schemas.UserInSchema, session: AsyncSession) -> User:
-    stmt = select(User).where(User.email == user.email)
-    db_user = (await session.execute(stmt)).scalar_one_or_none()
+async def is_exist_user(user: User, session: AsyncSession) -> User:
+    stmt_email = select(User).where(User.email == user.email)
+    db_user_email = (await session.execute(stmt_email)).scalar_one_or_none()
+    if db_user_email:
+        raise HTTPException(status_code=400, detail="Email already in use")
 
-    if db_user is None:
-        return user
-    raise HTTPException(status_code=400, detail="Email already in use")
+    stmt_username = select(User).where(User.username == user.username)
+    db_user_username = (await session.execute(stmt_username)).scalar_one_or_none()
+    if db_user_username:
+        raise HTTPException(status_code=400, detail="Username already in use")
+    return user

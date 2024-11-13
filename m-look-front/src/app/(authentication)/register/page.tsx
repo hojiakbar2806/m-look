@@ -5,33 +5,23 @@ import Link from "next/link";
 import React from "react";
 import Input from "src/components/common/input";
 import { RegisterService } from "src/services/auth.service";
-
-type RegisterData = {
-  full_name: string;
-  email: string;
-  password: string;
-};
-
-type Success = {
-  message: string;
-  token: string;
-};
+import { IUserRegister } from "src/types/user";
 
 export default function RegisterPage() {
   const mutation = useMutation({
-    mutationFn: (data: RegisterData) => RegisterService(data),
-    onSuccess: (data: Success) => console.log(data),
-    onError: (error: Error) => console.log(error),
+    mutationFn: (data: IUserRegister) => RegisterService(data),
   });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const data: RegisterData = {
+    const data = {
       full_name: formData.get("full_name") as string,
       email: formData.get("email") as string,
+      username: formData.get("username") as string,
       password: formData.get("password") as string,
+      phone_number: formData.get("phone_number") as string,
     };
 
     mutation.mutate(data);
@@ -46,21 +36,26 @@ export default function RegisterPage() {
 
       <Input label="Fullname" type="text" name="full_name" />
 
+      <Input label="Phone number" type="text" name="phone_number" />
+
+      <Input label="Username" type="email" name="username" />
+
       <Input label="Email" type="email" name="email" />
 
       <Input label="Password" type="password" name="password" />
 
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Login
+      <button
+        type="submit"
+        className={`bg-primary text-white p-2 rounded ${
+          mutation.isPending ? "bg-primary/50" : ""
+        }`}
+      >
+        {mutation.isPending ? "Loading ..." : "Register"}
       </button>
 
-      <Link href="/login" className="text-blue-500">
+      <Link href="/login" className="text-primary">
         Login
       </Link>
-
-      {mutation.isError && (
-        <p className="text-red-500">{mutation.error?.message}</p>
-      )}
     </form>
   );
 }

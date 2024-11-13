@@ -1,15 +1,16 @@
 from pydantic import BaseModel, Field, EmailStr
 
 
-class UserInSchema(BaseModel):
+class Register(BaseModel):
     full_name: str = Field(..., min_length=3, max_length=100)
     email: EmailStr
-    hashed_password: str = Field(..., min_length=4,
-                                 max_length=16, alias="password")
+    username: str   
+    phone_number: str
+    hashed_password: str = Field(..., min_length=4, alias="password")
 
 
 class LoginSchema(BaseModel):
-    email: EmailStr
+    username: str
     password: str = Field(..., min_length=4)
 
     class Config:
@@ -20,4 +21,3 @@ class TokenResponse(BaseModel):
     access_token: str
     type: str = "Bearer"
     message: str
-    status: str
