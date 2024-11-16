@@ -2,7 +2,7 @@ from sqlalchemy import select
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Cookie
 
 from api.auth import schemas
 from models.user import Profile, User
@@ -21,6 +21,7 @@ async def register_user(
     user: schemas.Register = Depends(valid_user),
     session: AsyncSession = Depends(get_async_session),
 ):
+    '''salom'''
 
     user.hashed_password = hash_password(user.hashed_password)
     new_user = User(**user.model_dump())
@@ -43,7 +44,7 @@ async def register_user(
 
 
 @router.post("/activate/{token}")
-async def activate_user(response: Response, token: str, session: AsyncSession = Depends(get_async_session)):
+async def activate_user(token: str, session: AsyncSession = Depends(get_async_session)):
     sub = jwt.decode_activation_token(token).get("sub")
     stmt = select(User).where(User.username == sub)
     user = (await session.execute(stmt)).scalar_one_or_none()
@@ -51,12 +52,12 @@ async def activate_user(response: Response, token: str, session: AsyncSession = 
         raise HTTPException(status_code=400, detail="User not found")
     user.is_active = True
     await session.commit()
-
-    access_token = jwt.create_access_token(sub)
     refresh_token = jwt.create_refresh_token(sub)
-
     expires = datetime.utcnow() + timedelta(days=30)
-
+    response = JSONResponse(
+        status_code=200,
+        content={"message": "Account verified"}
+    )
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -66,15 +67,17 @@ async def activate_user(response: Response, token: str, session: AsyncSession = 
         secure=True,
         samesite='None'
     )
-    return schemas.TokenResponse(access_token=access_token, message="Account has been activated")
+    return response
 
 
 @router.post("/login", response_model=schemas.TokenResponse)
-async def login_user(response: Response, user: User = Depends(get_verified_user)):
+async def login_user(user: User = Depends(get_verified_user)):
     refresh_token = jwt.create_refresh_token(user.username)
-
     expires = datetime.utcnow() + timedelta(days=30)
-
+    response = JSONResponse(
+        status_code=200,
+        content={"message": "Login successfully"}
+    )
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -84,14 +87,15 @@ async def login_user(response: Response, user: User = Depends(get_verified_user)
         secure=True,
         samesite='None'
     )
-    return JSONResponse(status_code=200, content={"message": "Login successfully"})
+    return response
 
 
 @router.post("/logout")
-def logout_user(response: Response, refresh_token: str = Cookie(None)):
+def logout_user(refresh_token: str = Cookie(None)):
     if not refresh_token:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="You are not logged in")
+        raise HTTPException(status_code=404, detail="You are not logged in")
+    response = JSONResponse(status_code=200, content={
+                            "message": "Logout successfully"})
     response.set_cookie(
         key="refresh_token",
         value="",
@@ -101,7 +105,7 @@ def logout_user(response: Response, refresh_token: str = Cookie(None)):
         max_age=0,
         expires=0
     )
-    return JSONResponse(status_code=200, content={"message": "Logout successfully"})
+    return response
 
 
 @router.post("/refresh-token")

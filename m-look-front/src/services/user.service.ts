@@ -1,6 +1,6 @@
 import { useAuthStore } from "src/store/authStore";
-import axios from "axios";
-import { IUpdateUser } from "src/types/user";
+import axios from "./api.service";
+import { IUserUpdate } from "src/types/user";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/`;
 
@@ -16,9 +16,9 @@ userApiInstance.interceptors.request.use(async (config) => {
 });
 
 export const MyProfileService = async () => {
-  return await userApiInstance.get("user/profile");
+  return await userApiInstance.get("user/me");
 };
 
-export const UpdateProfileService = async (data: IUpdateUser) => {
+export const UpdateProfileService = async (data: IUserUpdate) => {
   return await userApiInstance.patch("user", data);
 };

@@ -24,13 +24,11 @@ export interface IUserRegister {
   full_name: string;
 }
 
-export interface IUpdateUser {
-  username: string;
-  password: string;
+export interface IUserUpdate {
   email: string;
   phone_number: string;
   full_name: string;
   bio: string;
-  profile_pic: string;
+  gender: string;
   birth_date: string;
 }

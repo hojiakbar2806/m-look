@@ -10,7 +10,6 @@ export default function Page() {
     queryFn: MyProfileService,
   });
 
-  console.log(data);
   return (
     <ProtectedPage>
       <h1 className="text-5xl p-4 text-center bg-primary">

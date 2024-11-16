@@ -1,8 +1,9 @@
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from api.user import schemas
 from core.enums import RoleEnum
 from models.user import Profile, User
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.auth.dependency import valid_user
 from core.protected_route import protected_route
@@ -13,11 +14,20 @@ from database.session import get_async_session
 router = APIRouter(prefix="/user", tags=["User"])
 
 
-@router.get("/me")
+@router.get("/me", response_model=schemas.UserProfileOut)
 async def get_me(
-    current_user: User = Depends(current_active_user)
-) -> schemas.UserOut:
-    return current_user
+    current_user: User = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    stmt = select(User).options(selectinload(User.profile)).filter(User.id == current_user.id)
+
+    result = await session.execute(stmt)
+    user_with_profile = result.scalars().first()
+
+    if not user_with_profile:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user_with_profile
 
 
 @router.post("/user")
@@ -44,5 +54,5 @@ async def create_user(
 
 
 @router.patch("/user")
-async def updated_user(user:schemas.UserUpdate):
+async def updated_user(user: schemas.UserUpdate):
     pass

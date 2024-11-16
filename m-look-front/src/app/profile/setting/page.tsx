@@ -10,6 +10,7 @@ import {
   MyProfileService,
   UpdateProfileService,
 } from "src/services/user.service";
+import { IUserUpdate } from "src/types/user";
 
 export default function SettingPage() {
   const [image, setImage] = useState<string>();
@@ -21,7 +22,7 @@ export default function SettingPage() {
   });
 
   const mutation = useMutation({
-    mutationFn: UpdateProfileService,
+    mutationFn: (data: IUserUpdate) => UpdateProfileService(data),
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["profile"] });
     },
@@ -38,11 +39,10 @@ export default function SettingPage() {
     const birthDate = formData.get("birth_date") as string;
     const formattedBirthDate = new Date(birthDate).toISOString();
 
-    const data = {
+    const data: IUserUpdate = {
       full_name: formData.get("fullName") as string,
       email: formData.get("email") as string,
       phone_number: formData.get("phoneNumber") as string,
-      username: formData.get("username") as string,
       bio: formData.get("bio") as string,
       gender: formData.get("gender") as string,
       birth_date: formattedBirthDate,

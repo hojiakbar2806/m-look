@@ -13,7 +13,7 @@ export default function Login() {
 
   const mutation = useMutation({
     mutationFn: (data: IUserLogin) => LoginService(data),
-    // onSuccess: () => router.push("/"),
+    onSuccess: () => router.push("/"),
   });
 
   const onSubmit = (formData: FormData) => {

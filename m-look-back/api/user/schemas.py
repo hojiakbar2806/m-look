@@ -22,11 +22,15 @@ class UserBase(BaseModel):
 
 
 class ProfileBase(BaseModel):
-    user_id: int
-    gender: Optional[GenderEnum] = None
+    gender: Optional[str] = None
     birth_date: Optional[datetime] = None
     bio: Optional[str] = None
 
+    class Config:
+        from_attributes = True
+
+
+class ProfileOut(ProfileBase):
     class Config:
         from_attributes = True
 
@@ -44,12 +48,11 @@ class UserOut(UserBase, TimeMix):
         from_attributes = True
 
 
-class UserProfileOut(UserBase):
+class UserProfileOut(UserOut):
     id: int
     last_login: datetime
     role: RoleEnum
-    profile: Optional[ProfileBase] = None
-
+    profile: Optional[ProfileOut] = None
 
     class Config:
         from_attributes = True

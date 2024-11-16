@@ -1,11 +1,7 @@
 import axios from "axios";
 import { ISearchParams } from "src/types/mixin";
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/`;
-
-const productApiInstance = axios.create({
-  baseURL: BASE_URL,
-});
+const productApiInstance = axios.create();
 
 export const SearchProduct = async (query: string) => {
   const URL = query ? `/products/?query=${query}` : "/products";

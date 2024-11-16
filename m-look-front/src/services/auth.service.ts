@@ -1,15 +1,21 @@
 import { IUserLogin, IUserRegister } from "src/types/user";
-import axios from "axios";
-
-const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/`;
+import axios from "./api.service";
+import { toast } from "sonner";
 
 const authApiInstance = axios.create({
-  baseURL: BASE_URL,
   withCredentials: true,
 });
 
 export const LoginService = async (data: IUserLogin) => {
-  return await authApiInstance.post("auth/login", data);
+  try {
+    const res = await authApiInstance.post("auth/login", data);
+    if (res.status >= 200 && res.status < 300) {
+      toast.success(res.data.message);
+    }
+    return res;
+  } catch {
+    toast.error(`Login failed`);
+  }
 };
 
 export const LogoutService = async () => {

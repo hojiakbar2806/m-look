@@ -12,7 +12,6 @@ type sideBarProps = {
 
 const SideBarLink: React.FC<sideBarProps> = ({ name, path, icon }) => {
   const pathName = usePathname().split("/").slice(0, 3).join("/");
-  console.log(pathName);
   const isActive = pathName === path;
 
   return (
