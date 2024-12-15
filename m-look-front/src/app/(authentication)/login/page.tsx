@@ -5,15 +5,12 @@ import Link from "next/link";
 import Input from "src/components/common/input";
 import { LoginService } from "src/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { IUserLogin } from "src/types/user";
 
 export default function Login() {
-  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: (data: IUserLogin) => LoginService(data),
-    onSuccess: () => router.push("/"),
   });
 
   const onSubmit = (formData: FormData) => {

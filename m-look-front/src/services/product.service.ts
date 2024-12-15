@@ -1,11 +1,9 @@
-import axios from "axios";
 import { ISearchParams } from "src/types/mixin";
-
-const productApiInstance = axios.create();
+import { api } from "./api.service";
 
 export const SearchProduct = async (query: string) => {
   const URL = query ? `/products/?query=${query}` : "/products";
-  return await productApiInstance.get(URL);
+  return await api.get(URL);
 };
 
 export const getProductsService = async (
@@ -13,5 +11,5 @@ export const getProductsService = async (
   productType: string
 ) => {
   const URL = query ? `product/${productType}/?query=${query}` : "/products";
-  return await productApiInstance.get(URL);
+  return await api.get(URL);
 };

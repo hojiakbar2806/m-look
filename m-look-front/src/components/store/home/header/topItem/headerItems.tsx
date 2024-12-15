@@ -4,7 +4,6 @@ import LanguageDropdown from "../navItems/langDropDown";
 import { UserRound } from "lucide-react";
 import SearchBar from "./searchComp";
 import CartComp from "./cartComp";
-import LogoutButton from "./logout";
 
 const HeaderItems = () => {
   return (
@@ -23,7 +22,6 @@ const HeaderItems = () => {
         <Suspense>
           <SearchBar />
         </Suspense>
-        <LogoutButton />
       </ul>
     </div>
   );

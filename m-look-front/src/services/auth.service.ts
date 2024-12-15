@@ -1,16 +1,15 @@
 import { IUserLogin, IUserRegister } from "src/types/user";
-import axios from "./api.service";
 import { toast } from "sonner";
-
-const authApiInstance = axios.create({
-  withCredentials: true,
-});
+import { api } from "./api.service";
 
 export const LoginService = async (data: IUserLogin) => {
   try {
-    const res = await authApiInstance.post("auth/login", data);
+    const res = await api.post("auth/login", data);
     if (res.status >= 200 && res.status < 300) {
       toast.success(res.data.message);
+      const redirect = localStorage.getItem("redirectURL") || "/";
+      window.location.href = redirect;
+      localStorage.removeItem("redirectURL");
     }
     return res;
   } catch {
@@ -18,18 +17,27 @@ export const LoginService = async (data: IUserLogin) => {
   }
 };
 
-export const LogoutService = async () => {
-  return await authApiInstance.post("auth/logout");
+export const RegisterService = async (data: IUserRegister) => {
+  try {
+    const res = await api.post("auth/register", data);
+    if (res.status >= 200 && res.status < 300) {
+      toast.success(res.data.message);
+      window.location.href = "/";
+    }
+    return res;
+  } catch {
+    toast.error(`Registration failed`);
+  }
 };
 
-export const RegisterService = async (data: IUserRegister) => {
-  return await authApiInstance.post("auth/register", data);
+export const LogoutService = async () => {
+  return await api.post("auth/logout");
 };
 
 export const ActivateService = async (token: string) => {
-  return await authApiInstance.post(`/auth/activate/${token}`);
+  return await api.post(`/auth/activate/${token}`);
 };
 
 export const SessionService = async () => {
-  return await authApiInstance.post("/auth/refresh-token");
+  return await api.post("/auth/refresh-token");
 };

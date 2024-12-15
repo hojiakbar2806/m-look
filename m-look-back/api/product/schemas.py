@@ -9,14 +9,14 @@ class ProductBase(BaseModel):
     description: str
     stock_in: int
     color: str
+    price_id: Optional[int]
     selling_count: int
     discount: float
-    for_whom: GenderEnum
     category_id: Optional[int]
-    price_id: Optional[int]
+    for_whom: GenderEnum
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProductPrice(BaseModel):

@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect, useState } from "react";
-import Loading from "src/components/common/loading";
 import { useAuthStore } from "src/store/authStore";
+import Loading from "src/components/common/loading";
 
 interface ProtectedPageProps {
   children: ReactNode;
@@ -27,9 +27,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
     checkToken();
   }, [token, router, getToken]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <div className="transition-all duration-300 ease-in-out">{children}</div>

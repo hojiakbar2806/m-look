@@ -8,6 +8,7 @@ import { addToWishList } from "src/redux/feature/wishListSlice";
 import { RootState } from "src/redux/store";
 import { Product } from "src/types/product";
 import Rating from "../rating";
+import Image from "next/image";
 
 type ProductCardProps = {
   product: Product;
@@ -25,8 +26,10 @@ const ProductListCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <div className="group relative flex w-full flex-col  min-[600px]:flex-row gap-3 md:gap-4 rounded-lg border bg-white p-2 sm:p-3 md:p-4 hover:border-blue-200 transition-colors duration-300">
-      <div className="relative aspect-[4/3] w-full sm:w-[200px] md:w-[250px] lg:w-[300px] overflow-hidden rounded-md"></div>
-
+      <div className="relative aspect-[4/3] w-full sm:w-[200px] md:w-[250px] lg:w-[300px] overflow-hidden rounded-md">
+      <Image src={product.img} width={500} height={350} alt="Product image" />
+      
+      </div>
       <div className="flex flex-1 flex-col gap-2">
         <div className="space-y-1 sm:space-y-2">
           <h1 className="line-clamp-1 text-sm sm:text-base md:text-lg font-semibold text-dark capitalize">

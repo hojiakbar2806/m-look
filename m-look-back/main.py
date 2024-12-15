@@ -1,11 +1,11 @@
+import uvicorn
 from fastapi import FastAPI, Request
 from database.session import create_tables
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import asynccontextmanager
-
+from api.user import user_router
 from api.auth import auth_router
 from api.product import product_router
-from api.user import user_router
 
 
 @asynccontextmanager
@@ -18,8 +18,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     version="1.0.0",
     title="FastAPI",
-    lifespan=lifespan,
     docs_url="/api/docs",
+    lifespan=lifespan,
     description="FastAPI",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
@@ -52,3 +52,7 @@ async def root():
 app.include_router(auth_router, prefix="/api")
 app.include_router(product_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

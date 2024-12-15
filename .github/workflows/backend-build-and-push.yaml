@@ -28,26 +28,26 @@ jobs:
       - name: Verify Docker Image
         run: docker inspect ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest --format '{{.Id}}'
 
-      # - name: Deploy to AWS
-      #   run: |
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-      #     chmod 600 ~/ssh_key
+      - name: Deploy to AWS
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
 
-      #     ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      #       cd ~/rental-yards
+          ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/rental-yards
 
-      #       git pull origin backend
+            git pull origin backend
 
-      #       rm -rf frontend backend .github
+            rm -rf frontend backend .github
 
-      #       echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
+            echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 
-      #       sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest
 
-      #       sudo docker compose stop backend
-      #       sudo docker compose rm -f backend
-      #       sudo docker compose up -d backend
+            sudo docker compose stop backend
+            sudo docker compose rm -f backend
+            sudo docker compose up -d backend
 
-      #       sudo docker image prune -f
-      #       sudo docker container prune -f
-      #     EOF
+            sudo docker image prune -f
+            sudo docker container prune -f
+          EOF

@@ -22,7 +22,8 @@ class Product(Base, TimeStampMixin):
 
     category = relationship("ProductCategory", back_populates="products")
     review = relationship("ProductReview", back_populates="product")
-    price = relationship("ProductPrice", back_populates="product")
+    price = relationship("ProductPrice", back_populates="product",
+                         cascade="all, delete-orphan", single_parent=True)
     images = relationship("ProductImage", back_populates="product")
 
     def __repr__(self):
@@ -46,7 +47,8 @@ class ProductPrice(Base, TimeStampMixin):
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
     current_amount = sa.Column(sa.Float, nullable=True)
-    currency = sa.Column(sa.Enum(CurrencyEnum),default=CurrencyEnum.UZS, nullable=False)
+    currency = sa.Column(sa.Enum(CurrencyEnum),
+                         default=CurrencyEnum.UZS, nullable=False)
     old_amount = sa.Column(sa.Float, nullable=True)
 
     product = relationship("Product", back_populates="price")

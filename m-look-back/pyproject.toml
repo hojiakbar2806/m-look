@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.4"
+fastapi = "^0.115.5"
 alembic = "^1.13.3"
 uvicorn = "^0.32.0"
 asyncpg = "^0.30.0"
@@ -19,6 +19,9 @@ pydantic-settings = "^2.6.0"
 python-dotenv = "^1.0.1"
 gunicorn = "^23.0.0"
 pydantic = {extras = ["email"], version = "^2.9.2"}
+greenlet = "^3.1.1"
+cryptography = "^43.0.3"
+starlette = "^0.41.3"
 
 
 [build-system]

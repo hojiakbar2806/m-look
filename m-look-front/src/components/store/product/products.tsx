@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import ProductBar from "./productBar";
+import ProductBar from "./productBar/productBar";
 import { AlertCircle } from "lucide-react";
 import ProductsWrapper from "src/components/common/product/wrapper";
 import ProductGridCard from "src/components/common/product/cardGrid";

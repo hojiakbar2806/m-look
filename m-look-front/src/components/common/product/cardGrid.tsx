@@ -25,13 +25,10 @@ const ProductGridCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <figure className="w-full relative cursor-pointer">
         <Image
-          onError={(e) => {
-            console.error("Error loading image:", e);
-          }}
           src={product.img}
           width={500}
           height={350}
-          alt="Mahsulot rasmi"
+          alt="Product image"
         />
         <span className="absolute right-0 bottom-0 bg-secondary text-white px-2 text-xs md:text-lg">
           {product.discount}%

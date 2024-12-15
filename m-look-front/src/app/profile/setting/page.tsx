@@ -16,7 +16,7 @@ export default function SettingPage() {
   const [image, setImage] = useState<string>();
   const client = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["profile"],
     queryFn: MyProfileService,
   });

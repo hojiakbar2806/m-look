@@ -1,8 +1,39 @@
 import axios from "axios";
+import { useAuthStore } from "src/store/authStore";
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/`;
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "/api/"
+    : "http://localhost:8000/api/";
 
-axios.defaults.baseURL = BASE_URL;
-axios.defaults.headers.common["Content-Type"] = "application/json";
+const apiWithAuth = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer token",
+  },
+});
 
-export default axios;
+apiWithAuth.interceptors.request.use(async (config) => {
+  const { getToken } = useAuthStore.getState();
+  const token = await getToken();
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+const apiWithCredentials = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export { apiWithAuth, apiWithCredentials, api };

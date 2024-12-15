@@ -1,12 +1,11 @@
 "use client";
 
-import BestSellerCard from "./bestSeller";
-import BrandCard from "./brand";
-import ColorCard from "./color";
-import PriceCard from "./price";
+import BestSellerCard from "./common/bestSeller";
+import BrandCard from "./common/brand";
+import ColorCard from "./common/color";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
-import SizeCard from "./size";
+import SizeCard from "./common/size";
 
 const Category = () => {
   const navbarState = useSelector((state: RootState) => state.navbarHeight);
@@ -18,7 +17,7 @@ const Category = () => {
       <BestSellerCard />
       <ColorCard colors={["red", "blue", "green", "yellow"]} />
       <SizeCard sizes={["XS", "S", "M", "L", "XL", "XXL"]} />
-      <PriceCard min={0} max={100} width="260px" />
+      {/* <PriceCard min={0} max={100} width="260px" /> */}
       <BrandCard />
     </div>
   );

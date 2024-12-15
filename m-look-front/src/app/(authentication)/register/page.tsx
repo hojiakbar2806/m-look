@@ -38,7 +38,7 @@ export default function RegisterPage() {
 
       <Input label="Phone number" type="text" name="phone_number" />
 
-      <Input label="Username" type="email" name="username" />
+      <Input label="Username" type="text" name="username" />
 
       <Input label="Email" type="email" name="email" />
 
