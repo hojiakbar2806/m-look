@@ -4,13 +4,13 @@ from fastapi import HTTPException
 from datetime import datetime, timedelta
 
 
-PRIVATE_KEY = settings.JWT.PRIVATE_KEY_PATH.read_text()
-PUBLIC_KEY = settings.JWT.PUBLIC_KEY_PATH.read_text()
-ALGORITHM = settings.JWT.ALGORITHM
-SECRET_KEY = settings.JWT.SECRET_KEY
-ACCESS_EXP_MIN = settings.JWT.ACCESS_TOKEN_EXPIRES_MINUTES
-REFRESH_EXP_MIN = settings.JWT.REFRESH_TOKEN_EXPIRES_MINUTES
-ACTIVATION_TOKEN_EXPIRES_MINUTS = settings.JWT.ACTIVATION_TOKEN_EXPIRES_MINUTS
+PRIVATE_KEY = settings.PRIVATE_KEY_PATH.read_text()
+PUBLIC_KEY = settings.PUBLIC_KEY_PATH.read_text()
+ALGORITHM = settings.ALGORITHM
+SECRET_KEY = settings.SECRET_KEY
+ACCESS_EXP_MIN = settings.ACCESS_TOKEN_EXPIRES_MINUTES
+REFRESH_EXP_MIN = settings.REFRESH_TOKEN_EXPIRES_MINUTES
+ACTIVATION_TOKEN_EXPIRES_MINUTS = settings.ACTIVATION_TOKEN_EXPIRES_MINUTS
 
 
 def encode_jwt(payload: dict, token_type: str, expires_delta: timedelta) -> str:
