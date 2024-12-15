@@ -38,7 +38,7 @@ jobs:
 
             git pull origin main
 
-            sudo rm -rf m-look-frontend m-look-backend .github
+            sudo rm -rf m-look-front m-look-back .github
 
             echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 

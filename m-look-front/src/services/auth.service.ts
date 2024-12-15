@@ -7,8 +7,8 @@ export const LoginService = async (data: IUserLogin) => {
     const res = await api.post("auth/login", data);
     if (res.status >= 200 && res.status < 300) {
       toast.success(res.data.message);
-      const redirect = localStorage.getItem("redirectURL") || "/";
-      window.location.href = redirect;
+      // const redirect = localStorage.getItem("redirectURL") || "/";
+      // window.location.href = redirect;
       localStorage.removeItem("redirectURL");
     }
     return res;
