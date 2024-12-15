@@ -19,14 +19,14 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            --cache-from ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest \
-            --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest ./m-look-back
+            --cache-from hojiakbar2806/m-look_backend:latest \
+            --tag hojiakbar2806/m-look_backend:latest ./m-look-back
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest
+        run: docker push hojiakbar2806/m-look_backend:latest
 
       - name: Verify Docker Image
-        run: docker inspect ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest --format '{{.Id}}'
+        run: docker inspect hojiakbar2806/m-look_backend:latest --format '{{.Id}}'
 
       - name: Deploy to AWS
         run: |
@@ -42,7 +42,7 @@ jobs:
 
             echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}:latest
+            sudo docker pull hojiakbar2806/m-look_backend:latest
 
             sudo docker compose stop backend
             sudo docker compose rm -f backend

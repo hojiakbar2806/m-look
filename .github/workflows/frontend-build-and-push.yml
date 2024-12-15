@@ -19,14 +19,14 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            --cache-from ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest \
-            --tag ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest ./m-look-front
+            --cache-from hojiakbar2806/m-look_frontend:latest \
+            --tag hojiakbar2806/m-look_frontend:latest ./m-look-front
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest
+        run: docker push hojiakbar2806/m-look_frontend:latest
 
       - name: Verify Docker Image
-        run: docker inspect ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest --format '{{.Id}}'
+        run: docker inspect hojiakbar2806/m-look_frontend:latest --format '{{.Id}}'
 
       - name: Deploy to AWS
         run: |
@@ -42,7 +42,7 @@ jobs:
 
             rm -rf frontend backend .github
 
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.FRONTEND_IMAGE_NAME }}:latest
+            sudo docker pull hojiakbar2806/m-look_frontend:latest
 
             sudo docker compose stop frontend
             sudo docker compose rm -f frontend
