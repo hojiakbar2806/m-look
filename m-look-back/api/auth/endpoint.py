@@ -12,6 +12,7 @@ from database.session import get_async_session
 from core.security.hashing import hash_password
 from core.security.utils import verify_user_token
 from api.auth.dependency import get_verified_user, valid_user
+from core.config import settings
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -21,7 +22,6 @@ async def register_user(
     user: schemas.Register = Depends(valid_user),
     session: AsyncSession = Depends(get_async_session),
 ):
-    '''salom'''
 
     user.hashed_password = hash_password(user.hashed_password)
     new_user = User(**user.model_dump())
@@ -64,7 +64,7 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
         max_age=30 * 24 * 60 * 60,
         expires=int(expires.timestamp()),
         httponly=True,
-        secure=True,
+        secure=not settings.DEBUG,
         samesite='None'
     )
     return response
