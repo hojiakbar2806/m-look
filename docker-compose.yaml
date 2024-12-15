@@ -25,6 +25,7 @@ services:
     container_name: frontend
     environment:
       - NODE_ENV=production
+      - API_ENDPOINT=/m-look/api
       - NEXT_PUBLIC_API_URL=http://backend:8000
     env_file:
       - .env  
