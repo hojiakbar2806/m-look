@@ -64,7 +64,7 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
         max_age=30 * 24 * 60 * 60,
         expires=int(expires.timestamp()),
         httponly=True,
-        secure=not settings.DEBUG,
+        secure=False,
         samesite='None'
     )
     return response
@@ -84,7 +84,7 @@ async def login_user(user: User = Depends(get_verified_user)):
         max_age=30 * 24 * 60 * 60,
         expires=int(expires.timestamp()),
         httponly=True,
-        secure=True,
+        secure=False,
         samesite='None'
     )
     return response
@@ -100,7 +100,7 @@ def logout_user(refresh_token: str = Cookie(None)):
         key="refresh_token",
         value="",
         httponly=True,
-        secure=True,
+        secure=False,
         samesite="None",
         max_age=0,
         expires=0
