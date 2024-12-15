@@ -1,43 +1,25 @@
-# Dependencies bosqichi
-FROM node:20-alpine AS dependencies
-
+# Stage 1: install dependencies
+FROM node:20-alpine AS deps
 WORKDIR /app
+COPY package*.json .
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+RUN npm install
 
-# Zaruriy build kutubxonalarni o'rnatish (python3, g++, make)
-RUN apk add --no-cache python3 g++ make
-
-COPY package*.json ./
-RUN npm install  
-
-# Build bosqichi
-FROM node:20-alpine AS build
-
+# Stage 2: build
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Hamma loyihani nusxalash
-COPY . .
-
-# Loyihani build qilish
+COPY --from=deps /app/node_modules ./node_modules
+COPY src ./src
+COPY public ./public
+COPY package.json next.config.ts tsconfig.json ./
 RUN npm run build
 
-# Production uchun keraksiz paketlarni olib tashlash va kechani tozalash
-RUN npm prune --production && npm cache clean --force
-
-# Production bosqichi
-FROM node:20-alpine AS production
-
+# Stage 3: run
+FROM node:20-alpine
 WORKDIR /app
-
-# Faqat zarur paketlarni o'rnatish
-COPY --from=dependencies /app/package*.json ./
-RUN npm ci --only=production
-
-# Build qilingan fayllarni nusxalash
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/public ./public
-
-# 3000 portni ochish
-EXPOSE 3000
-
-# Next.js serverini ishga tushirish
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
 CMD ["npm", "start"]
