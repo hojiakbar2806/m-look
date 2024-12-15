@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apk add --no-cache python3 g++ make
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install  
 
 # Build bosqichi
 FROM node:20-alpine AS build
