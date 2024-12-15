@@ -19,6 +19,7 @@ app = FastAPI(
     title="FastAPI",
     # lifespan=lifespan,
     description="FastAPI",
+    openapi_url="/m-look/api/openapi.json",
 )
 
 
@@ -27,7 +28,6 @@ async def debug_cookies(request: Request, call_next):
     print("Incoming cookies:", request.cookies)
     response = await call_next(request)
     return response
-
 
 app.add_middleware(
     CORSMiddleware,
