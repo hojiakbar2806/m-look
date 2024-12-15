@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ImagePlus } from "lucide-react";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Input from "src/components/common/input";
 import Textarea from "src/components/common/textarea";
@@ -54,7 +55,7 @@ export default function SettingPage() {
     if (data?.data.profile?.profile_pic) {
       setImage(`http://127.0.0.1:8000/api/${data?.data.profile?.profile_pic}`);
     }
-  }, []);
+  }, [data]);
 
   return (
     <ProtectedPage>
@@ -66,7 +67,7 @@ export default function SettingPage() {
             className="size-32 overflow-hidden cursor-pointer border-dashed grid place-items-center border rounded-lg"
           >
             {image ? (
-              <img src={image} alt="" className="object-cover h-full" />
+              <Image width={100} height={100} src={image} alt="" className="object-cover h-full" />
             ) : (
               <div>
                 <ImagePlus size={50} className="stroke-accent" />
