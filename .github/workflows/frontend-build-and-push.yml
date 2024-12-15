@@ -34,13 +34,13 @@ jobs:
           chmod 600 ~/ssh_key
 
           ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/rental-yards
+            cd ~/m-look
 
             echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 
-            git pull origin frontend
+            git pull origin main
 
-            rm -rf frontend backend .github
+            rm -rf m-look-frontend m-look-backend .github
 
             sudo docker pull hojiakbar2806/m-look_frontend:latest
 
