@@ -17,23 +17,19 @@ from api.product import product_router
 app = FastAPI(
     version="1.0.0",
     title="FastAPI",
-    docs_url="/api/docs",
+    docs_url="/docs",
     # lifespan=lifespan,
     description="FastAPI",
-    redoc_url="/api/redoc",
-    openapi_url="/api/openapi.json",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
 
-@app.middleware("http")
-async def debug_cookies(request: Request, call_next):
-    print("Incoming cookies:", request.cookies)
-    response = await call_next(request)
-    return response
-
-origins = [
-    "http://localhost:3000",
-]
+# @app.middleware("http")
+# async def debug_cookies(request: Request, call_next):
+#     print("Incoming cookies:", request.cookies)
+#     response = await call_next(request)
+#     return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,13 +40,13 @@ app.add_middleware(
 )
 
 
-@app.get("/api")
+@app.get("/")
 async def root():
     return {"message": "It works!!!"}
 
-app.include_router(auth_router, prefix="/api")
-app.include_router(product_router, prefix="/api")
-app.include_router(user_router, prefix="/api")
+app.include_router(auth_router)
+app.include_router(product_router)
+app.include_router(user_router)
 
 
 if __name__ == "__main__":
