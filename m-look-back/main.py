@@ -19,7 +19,7 @@ app = FastAPI(
     title="FastAPI",
     # lifespan=lifespan,
     description="FastAPI",
-    openapi_url="openapi.json",
+    openapi_url="/openapi.json",
 )
 
 
