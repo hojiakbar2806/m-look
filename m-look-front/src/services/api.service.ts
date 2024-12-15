@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useAuthStore } from "src/store/authStore";
 
+const API_ENDPOINT = process.env.API_ENDPOINT || "/api";
+
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "/api/"
-    : "http://localhost:8000/api/";
+    ? `${API_ENDPOINT}`
+    : `http://localhost:8000${API_ENDPOINT}`;
 
 const apiWithAuth = axios.create({
   baseURL: BASE_URL,
