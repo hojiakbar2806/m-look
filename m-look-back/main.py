@@ -1,3 +1,4 @@
+from fastapi.responses import JSONResponse
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,13 +23,6 @@ app = FastAPI(
     openapi_url="/m-look/api/openapi.json"
 )
 
-
-@app.middleware("http")
-async def debug_cookies(request: Request, call_next):
-    print("Incoming cookies:", request.cookies)
-    response = await call_next(request)
-    return response
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -41,6 +35,12 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "It works!!!"}
+
+
+@app.get("/openapi.json")
+async def custom_openapi():
+    openapi_schema = app.openapi()
+    return JSONResponse(openapi_schema)
 
 app.include_router(auth_router)
 app.include_router(product_router)
