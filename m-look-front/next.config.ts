@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  basePath:"/m-look",
+  basePath: process.env.NODE_ENV === "production" ? "/m-look" : "",
   images: {
     remotePatterns: [
       {
