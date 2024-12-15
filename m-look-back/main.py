@@ -21,7 +21,7 @@ app = FastAPI(
     # lifespan=lifespan,
     description="FastAPI",
     redoc_url="/redoc",
-    openapi_url="/openapi.json",
+    openapi_url="/api/openapi.json",
 )
 
 
