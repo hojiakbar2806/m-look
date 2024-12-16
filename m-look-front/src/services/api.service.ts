@@ -1,28 +1,16 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { useAuthStore } from "src/store/authStore";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/m-look/api"
-    : "http://localhost:8000/api";
+const axiosWithAuth = axios.create();
 
-const apiWithAuth = axios.create({
-  baseURL: BASE_URL,
-});
-
-apiWithAuth.interceptors.request.use(async (config) => {
-  const token = await useAuthStore.getState().getToken();
+axiosWithAuth.interceptors.request.use(async (config) => {
+  const { getToken } = useAuthStore.getState();
+  const token = await getToken();
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-const apiWithCredentials = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-});
+const axiosWithCredentials = axios.create({ withCredentials: true });
+const defaultAxios = axios.create();
 
-const api = axios.create({
-  baseURL: BASE_URL,
-});
-
-export { apiWithAuth, apiWithCredentials, api };
+export { axiosWithAuth, axiosWithCredentials, defaultAxios };

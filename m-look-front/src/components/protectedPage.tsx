@@ -19,7 +19,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
     const checkToken = async () => {
       const userToken = await getToken();
       if (!userToken) {
-        // router.push(`/login?next=${pathname}`);
+        router.push(`/login?next=${pathname}`);
       } else {
         setIsLoading(false);
       }

@@ -1,39 +1,35 @@
 import { IUserLogin, IUserRegister } from "src/types/user";
 import { toast } from "sonner";
-import { api, apiWithCredentials } from "./api.service";
+import { axiosWithCredentials, defaultAxios } from "./api.service";
+import { isAxiosError } from "axios";
+import { useAuthStore } from "src/store/authStore";
 
 export const LoginService = async (data: IUserLogin) => {
   try {
-    const res = await api.post("auth/login", data);
-    if (res.status >= 200 && res.status < 300) {
-      toast.success(res.data.message);
-    }
+    const res = await axiosWithCredentials.post("auth/login", data);
+    toast.success(res.data.message);
+    const { setAuth } = useAuthStore.getState();
+    setAuth(res.data.access_token);
     return res;
-  } catch (error: any) {
-    if (error) {
-      toast.error(error?.response?.data?.detail || "Login failed");
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Login failed");
     }
   }
 };
 
 export const RegisterService = async (data: IUserRegister) => {
-  try {
-    const res = await api.post("auth/register", data);
-    toast.success(res.data.message);
-    return res;
-  } catch {
-    toast.error(`Registration failed`);
-  }
+  return await defaultAxios.post("auth/register", data);
 };
 
 export const LogoutService = async () => {
-  return await api.post("auth/logout");
+  return await axiosWithCredentials.post("auth/logout");
 };
 
 export const ActivateService = async (token: string) => {
-  return await api.post(`/auth/activate/${token}`);
+  return await axiosWithCredentials.post(`/auth/activate/${token}`);
 };
 
 export const SessionService = async () => {
-  return await apiWithCredentials.post("/auth/refresh-token");
+  return await axiosWithCredentials.post("/auth/refresh-token");
 };
