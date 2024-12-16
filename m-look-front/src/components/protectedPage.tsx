@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useAuthStore } from "src/store/authStore";
 import Loading from "src/components/common/loading";
@@ -12,13 +12,14 @@ interface ProtectedPageProps {
 const ProtectedPage: React.FC<ProtectedPageProps> = ({ children }) => {
   const { getToken, token } = useAuthStore();
   const router = useRouter();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkToken = async () => {
       const userToken = await getToken();
       if (!userToken) {
-        router.push("/login");
+        // router.push(`/login?next=${pathname}`);
       } else {
         setIsLoading(false);
       }

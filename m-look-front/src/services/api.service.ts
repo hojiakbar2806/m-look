@@ -8,32 +8,21 @@ const BASE_URL =
 
 const apiWithAuth = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer token",
-  },
 });
 
 apiWithAuth.interceptors.request.use(async (config) => {
-  const { getToken } = useAuthStore.getState();
-  const token = await getToken();
+  const token = await useAuthStore.getState().getToken();
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 const apiWithCredentials = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
   withCredentials: true,
 });
 
 const api = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 export { apiWithAuth, apiWithCredentials, api };
