@@ -1,18 +1,17 @@
 from sqlalchemy import select
 from datetime import datetime, timedelta
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, Cookie
 
 from api.auth import schemas
-from models.user import Profile, User
 from core.security import jwt
 from core.enums import TokenType
+from models.user import Profile, User
 from database.session import get_async_session
 from core.security.hashing import hash_password
 from core.security.utils import verify_user_token
 from api.auth.dependency import get_verified_user, valid_user
-from core.config import settings
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -73,10 +72,11 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
 @router.post("/login", response_model=schemas.TokenResponse)
 async def login_user(user: User = Depends(get_verified_user)):
     refresh_token = jwt.create_refresh_token(user.username)
+    access_token = jwt.create_access_token(user.username)
     expires = datetime.utcnow() + timedelta(days=30)
     response = JSONResponse(
         status_code=200,
-        content={"message": "Login successfully"}
+        content={"message": "Login successfully", "access_token": access_token}
     )
     response.set_cookie(
         key="refresh_token",
@@ -93,15 +93,15 @@ async def login_user(user: User = Depends(get_verified_user)):
 def logout_user(refresh_token: str = Cookie(None)):
     if not refresh_token:
         raise HTTPException(status_code=404, detail="You are not logged in")
-    response = JSONResponse(status_code=200, content={
-                            "message": "Logout successfully"})
+    response = JSONResponse(
+        status_code=200,
+        content={"message": "Logout successfully"}
+    )
     response.set_cookie(
         key="refresh_token",
-        value="",
         httponly=True,
         secure=True,
         samesite="None",
-        max_age=0,
         expires=0
     )
     return response
