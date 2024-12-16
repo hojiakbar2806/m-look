@@ -10,7 +10,19 @@ axiosWithAuth.interceptors.request.use(async (config) => {
   return config;
 });
 
+axiosWithAuth.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const { refreshToken } = useAuthStore.getState();
+      await refreshToken();
+    }
+    return Promise.reject(error);
+  }
+);
+
 const axiosWithCredentials = axios.create({ withCredentials: true });
+
 const defaultAxios = axios.create();
 
 export { axiosWithAuth, axiosWithCredentials, defaultAxios };

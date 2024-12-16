@@ -10,6 +10,9 @@ export const LoginService = async (data: IUserLogin) => {
     toast.success(res.data.message);
     const { setAuth } = useAuthStore.getState();
     setAuth(res.data.access_token);
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextPath = urlParams.get("next") || "/";
+    window.location.href = nextPath;
     return res;
   } catch (error: unknown) {
     if (isAxiosError(error)) {
@@ -19,11 +22,27 @@ export const LoginService = async (data: IUserLogin) => {
 };
 
 export const RegisterService = async (data: IUserRegister) => {
-  return await defaultAxios.post("auth/register", data);
+  try {
+    const res = await defaultAxios.post("auth/register", data);
+    toast.success(res.data.message);
+    return res;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Register failed");
+    }
+  }
 };
 
 export const LogoutService = async () => {
-  return await axiosWithCredentials.post("auth/logout");
+  try {
+    const res = await axiosWithCredentials.post("auth/logout");
+    window.location.href = "/";
+    return res;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Logout failed");
+    }
+  }
 };
 
 export const ActivateService = async (token: string) => {
