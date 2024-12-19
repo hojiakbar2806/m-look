@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout Code
@@ -28,25 +28,32 @@ jobs:
       - name: Verify Docker Image
         run: docker inspect hojiakbar2806/m-look_frontend:latest --format '{{.Id}}'
 
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+      - name: Verify Directory Structure
+        run: ls -alh ./m-look-front
+
       - name: Deploy to AWS
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-          chmod 600 ~/ssh_key
-
-          ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ubuntu@13.53.95.28 << 'EOF'
+          echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
+          
+          ssh -o StrictHostKeyChecking=no ubuntu@13.53.95.28 << 'EOF'
             cd ~/m-look
 
-            echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
-
-            git pull origin main
+            git pull -f origin main
 
             sudo rm -rf m-look-front m-look-back .github
 
             sudo docker pull hojiakbar2806/m-look_frontend:latest
 
-            sudo docker compose stop frontend
-            sudo docker compose rm -f frontend
-            sudo docker compose up -d frontend
+            sudo docker-compose stop frontend
+            sudo docker-compose rm -f frontend
+            sudo docker-compose up -d frontend
 
             sudo docker image prune -f
             sudo docker container prune -f
