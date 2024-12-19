@@ -1,18 +1,7 @@
-from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta
+from fastapi.responses import JSONResponse
 
-from core.security import jwt
 from core.config import settings
-
-
-def to_came_case(name: str) -> str:
-    return "".join([word.lower() for word in name.split("_")])+"s"
-
-
-def create_tokens(username: str):
-    refresh_token = jwt.create_refresh_token(username)
-    access_token = jwt.create_access_token(username)
-    return refresh_token, access_token
 
 
 def set_refresh_token_cookie(response: JSONResponse, refresh_token: str):
