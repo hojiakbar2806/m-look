@@ -25,13 +25,6 @@ jobs:
       - name: Push Docker Image
         run: docker push hojiakbar2806/m-look_backend:latest
 
-      - name: Verify Docker Image
-        run: docker inspect hojiakbar2806/m-look_backend:latest --format '{{.Id}}'
-
-      - name: Verify Directory Structure
-        run: |
-          ls -alh ~/m-look
-
       - name: Check Git Configuration
         run: |
           git config --global --list

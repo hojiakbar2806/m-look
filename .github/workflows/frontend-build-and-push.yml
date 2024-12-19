@@ -25,16 +25,10 @@ jobs:
       - name: Push Docker Image
         run: docker push hojiakbar2806/m-look_frontend:latest
 
-      - name: Verify Docker Image
-        run: docker inspect hojiakbar2806/m-look_frontend:latest --format '{{.Id}}'
-
-      - name: Verify Directory Structure
-        run: ls -alh ./m-look-front
-
       - name: Deploy to AWS
         run: |
           echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
-          
+
           ssh -o StrictHostKeyChecking=no ubuntu@13.53.95.28 << 'EOF'
             cd ~/m-look
 
