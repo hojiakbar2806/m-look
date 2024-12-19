@@ -2,13 +2,8 @@ import ProductsWrapper from "src/components/common/product/wrapper";
 import LoadMore from "./loadMore";
 import React from "react";
 import ProductGridCard from "src/components/common/product/cardGrid";
-import ProductListCard from "src/components/common/product/cardList";
 
-const BestSellerProducts = async ({
-  view = "grid",
-}: {
-  view?: "grid" | "list";
-}) => {
+const BestSellerProducts = async () => {
   // await new Promise((resolve) => setTimeout(resolve, 10000));
   const product = {
     id: 1,
@@ -27,15 +22,10 @@ const BestSellerProducts = async ({
 
   return (
     <React.Fragment>
-      <ProductsWrapper view={view}>
-        {[...Array(18)].map((_, i) => {
-          const productWithId = { ...product, id: i };
-          return view === "grid" ? (
-            <ProductGridCard key={i} product={productWithId} />
-          ) : (
-            <ProductListCard key={i} product={productWithId} />
-          );
-        })}
+      <ProductsWrapper view={"grid"}>
+        {[...Array(18)].map((_, i) => (
+          <ProductGridCard key={i} product={product} />
+        ))}
       </ProductsWrapper>
       <LoadMore isLoading={false} />
     </React.Fragment>

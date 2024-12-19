@@ -1,39 +1,42 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { useAuthStore } from "src/store/authStore";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/m-look/api"
-    : "http://localhost:8000/api";
+const axiosWithAuth = axios.create();
 
-const apiWithAuth = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer token",
-  },
-});
-
-apiWithAuth.interceptors.request.use(async (config) => {
+axiosWithAuth.interceptors.request.use(async (config) => {
   const { getToken } = useAuthStore.getState();
   const token = await getToken();
+  if (!token) {
+    return config;
+  }
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-const apiWithCredentials = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-});
+axiosWithAuth.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const { refreshToken } = useAuthStore.getState();
+      await refreshToken();
+    }
+    return Promise.reject(error);
+  }
+);
 
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const axiosWithCredentials = axios.create({ withCredentials: true });
 
-export { apiWithAuth, apiWithCredentials, api };
+axiosWithCredentials.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const { logout } = useAuthStore.getState();
+      await logout();
+    }
+    return Promise.reject(error);
+  }
+);
+
+const defaultAxios = axios.create();
+
+export { axiosWithAuth, axiosWithCredentials, defaultAxios };

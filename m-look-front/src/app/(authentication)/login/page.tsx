@@ -8,7 +8,6 @@ import { useMutation } from "@tanstack/react-query";
 import { IUserLogin } from "src/types/user";
 
 export default function Login() {
-
   const mutation = useMutation({
     mutationFn: (data: IUserLogin) => LoginService(data),
   });
@@ -24,7 +23,8 @@ export default function Login() {
   return (
     <Form
       action={onSubmit}
-      className="w-full p-8 sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
+      className="w-full p-8 sm:max-w-lg
+       flex mt-auto gap-8 flex-col m-auto shadow-lg"
     >
       <h2 className="text-2xl font-bold">Login</h2>
       <Input value={"string"} label="Username" type="text" name="username" />

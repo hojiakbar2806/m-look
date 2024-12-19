@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ProductsWrapper from "src/components/common/product/wrapper";
-import Header from "src/components/store/home/header/header";
+import Header from "src/components/store/header/header";
 import Products from "src/components/store/search/products";
 
 type SearchParams = {
@@ -11,11 +11,13 @@ export default async function SearchPage({ searchParams }: SearchParams) {
   const query = await searchParams;
 
   return (
-    <div>
+    <Fragment>
       <Header />
-      <ProductsWrapper view={"grid"} className="p-4">
-        <Products query={query} />
-      </ProductsWrapper>
-    </div>
+      <div className="app-container ">
+        <ProductsWrapper view={"grid"} className="">
+          <Products query={query} />
+        </ProductsWrapper>
+      </div>
+    </Fragment>
   );
 }

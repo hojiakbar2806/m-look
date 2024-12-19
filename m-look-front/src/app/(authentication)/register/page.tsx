@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import Form from "next/form";
 import Link from "next/link";
 import React from "react";
 import Input from "src/components/common/input";
@@ -12,10 +13,7 @@ export default function RegisterPage() {
     mutationFn: (data: IUserRegister) => RegisterService(data),
   });
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
+  const onSubmit = (formData: FormData) => {
     const data = {
       full_name: formData.get("full_name") as string,
       email: formData.get("email") as string,
@@ -28,9 +26,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <form
-      className="w-full p-8  sm:w-1/2 lg:w-[400px] flex mt-auto gap-4 flex-col m-auto space-y-4 shadow-lg"
-      onSubmit={onSubmit}
+    <Form
+      action={onSubmit}
+      className="w-full p-8 sm:max-w-lg
+       flex mt-auto gap-8 flex-col m-auto shadow-lg"
     >
       <h2 className="text-2xl font-bold">Register</h2>
 
@@ -56,6 +55,6 @@ export default function RegisterPage() {
       <Link href="/login" className="text-primary">
         Login
       </Link>
-    </form>
+    </Form>
   );
 }

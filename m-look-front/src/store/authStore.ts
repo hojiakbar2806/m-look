@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 interface AuthStore {
   token: string | null;
-  setAuth: (newToken: string | null, loading: boolean) => void;
+  setAuth: (newToken: string) => void;
   refreshToken: () => Promise<string | null>;
   getToken: () => Promise<string | null>;
   logout: () => Promise<void>;
@@ -11,14 +11,13 @@ interface AuthStore {
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   token: null,
-  isLoading: false,
 
   setAuth: (newToken) => set({ token: newToken }),
 
   refreshToken: async () => {
     try {
       const response = await SessionService();
-      const newToken = await response.data.access_token;
+      const newToken = response.data.access_token;
       set({ token: newToken });
       return newToken;
     } catch (error) {
@@ -36,11 +35,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   logout: async () => {
-    try {
-      await LogoutService();
-      set({ token: null });
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+    await LogoutService();
+    window.location.href = "/";
   },
 }));

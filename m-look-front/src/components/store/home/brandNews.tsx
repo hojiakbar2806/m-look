@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const BrandNews = () => {
   return (
-    <div className="global-padding flex justify-center bg-primary md:flex-row items-center flex-col-reverse py-6 md:py-12 mt-20">
+    <div className="app-container flex justify-center bg-primary md:flex-row items-center flex-col-reverse py-6 md:py-12 mt-20">
       <div className="text-white flex-1 flex flex-col items-start gap-6">
         <h1 className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
           Adidas Men Running Sneakers

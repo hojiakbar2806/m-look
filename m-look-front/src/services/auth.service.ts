@@ -1,43 +1,53 @@
 import { IUserLogin, IUserRegister } from "src/types/user";
 import { toast } from "sonner";
-import { api } from "./api.service";
+import { axiosWithCredentials, defaultAxios } from "./api.service";
+import { isAxiosError } from "axios";
+import { useAuthStore } from "src/store/authStore";
 
 export const LoginService = async (data: IUserLogin) => {
   try {
-    const res = await api.post("auth/login", data);
-    if (res.status >= 200 && res.status < 300) {
-      toast.success(res.data.message);
-      const redirect = localStorage.getItem("redirectURL") || "/";
-      window.location.href = redirect;
-      localStorage.removeItem("redirectURL");
-    }
+    const res = await axiosWithCredentials.post("auth/login", data);
+    toast.success(res.data.message);
+    const { setAuth } = useAuthStore.getState();
+    setAuth(res.data.access_token);
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextPath = urlParams.get("next") || "/";
+    window.location.href = nextPath;
     return res;
-  } catch {
-    toast.error(`Login failed`);
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Login failed");
+    }
   }
 };
 
 export const RegisterService = async (data: IUserRegister) => {
   try {
-    const res = await api.post("auth/register", data);
-    if (res.status >= 200 && res.status < 300) {
-      toast.success(res.data.message);
-      window.location.href = "/";
-    }
+    const res = await defaultAxios.post("auth/register", data);
+    toast.success(res.data.message);
     return res;
-  } catch {
-    toast.error(`Registration failed`);
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Register failed");
+    }
   }
 };
 
 export const LogoutService = async () => {
-  return await api.post("auth/logout");
+  try {
+    const res = await axiosWithCredentials.post("auth/logout");
+    toast.success(res.data.message);
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.detail || "Logout failed");
+    }
+  }
 };
 
 export const ActivateService = async (token: string) => {
-  return await api.post(`/auth/activate/${token}`);
+  return await axiosWithCredentials.post(`/auth/activate/${token}`);
 };
 
 export const SessionService = async () => {
-  return await api.post("/auth/refresh-token");
+  return await axiosWithCredentials.post("/auth/refresh-token");
 };

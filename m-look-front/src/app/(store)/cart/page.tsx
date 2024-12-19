@@ -2,17 +2,18 @@
 
 import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
-import Header from "src/components/store/home/header/header";
+import { Fragment } from "react";
+import Header from "src/components/store/header/header";
 import useCartStore from "src/store/cartStore";
 
 export default function CartPage() {
-  const { items, incrementCartItem, decrementCartItem, removeItem } =useCartStore();
+  const { items, incrementCartItem, decrementCartItem, removeItem } =
+    useCartStore();
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Header />
-      <div className="w-full flex justify-center global-padding">
+      <div className="h-full flex justify-center items-center app-container">
         {items.length === 0 ? (
           <div className="text-center mt-10 flex flex-col items-center">
             <ShoppingCart className="w-16 h-16 text-gray-400" />
@@ -74,6 +75,6 @@ export default function CartPage() {
           </table>
         )}
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 }

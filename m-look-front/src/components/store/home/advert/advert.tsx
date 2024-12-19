@@ -1,6 +1,5 @@
 import React from "react";
 import AdsBanner from "./banner";
-import AdsProduct from "./product";
 
 export default function Ads() {
   const ads = {
@@ -55,7 +54,7 @@ export default function Ads() {
   return (
     <div className="w-full flex flex-col">
       <AdsBanner ads={ads} />
-      <AdsProduct ads={ads} />
+      {/* <AdsProduct ads={ads} /> */}
     </div>
   );
 }

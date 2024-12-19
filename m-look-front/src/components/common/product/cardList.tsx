@@ -1,11 +1,7 @@
 "use client";
 
 import { HeartIcon, ShoppingCart } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "src/redux/feature/cartSlice";
-import { addToWishList } from "src/redux/feature/wishListSlice";
-import { RootState } from "src/redux/store";
+import { useState } from "react";
 import { Product } from "src/types/product";
 import Rating from "../rating";
 import Image from "next/image";
@@ -15,20 +11,17 @@ type ProductCardProps = {
 };
 
 const ProductListCard: React.FC<ProductCardProps> = ({ product }) => {
-  const dispatch = useDispatch();
-  const [heartColor, setHeartColor] = useState("none");
-  const wishList = useSelector((state: RootState) => state.wishList);
+  const [heartColor] = useState("none");
 
-  useEffect(() => {
-    const isExist = wishList.some((item) => item.id === product.id);
-    setHeartColor(isExist ? "#33A0FF" : "none");
-  }, [wishList, product.id]);
+  // useEffect(() => {
+  //   const isExist = wishList.some((item) => item.id === product.id);
+  //   setHeartColor(isExist ? "#33A0FF" : "none");
+  // }, [wishList, product.id]);
 
   return (
     <div className="group relative flex w-full flex-col  min-[600px]:flex-row gap-3 md:gap-4 rounded-lg border bg-white p-2 sm:p-3 md:p-4 hover:border-blue-200 transition-colors duration-300">
       <div className="relative aspect-[4/3] w-full sm:w-[200px] md:w-[250px] lg:w-[300px] overflow-hidden rounded-md">
-      <Image src={product.img} width={500} height={350} alt="Product image" />
-      
+        <Image src={product.img} width={500} height={350} alt="Product image" />
       </div>
       <div className="flex flex-1 flex-col gap-2">
         <div className="space-y-1 sm:space-y-2">
@@ -49,17 +42,11 @@ const ProductListCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         <div className="flex items-center gap-2 pt-2">
-          <button
-            onClick={() => dispatch(addToCart(product))}
-            className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-xs sm:text-sm text-primary hover:bg-primary hover:text-white transition-colors duration-300"
-          >
+          <button className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-xs sm:text-sm text-primary hover:bg-primary hover:text-white transition-colors duration-300">
             <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
             <span className="hidden sm:inline">Add to cart</span>
           </button>
-          <button
-            onClick={() => dispatch(addToWishList(product))}
-            className="group flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-primary hover:bg-primary transition-colors duration-300"
-          >
+          <button className="group flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-primary hover:bg-primary transition-colors duration-300">
             <HeartIcon
               className="h-4 w-4 sm:h-5 sm:w-5"
               stroke="#33A0FF"

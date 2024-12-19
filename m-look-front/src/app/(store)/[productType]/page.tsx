@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "src/components/store/home/header/header";
+import Header from "src/components/store/header/header";
 import Category from "src/components/store/product/category/category";
 import Products from "src/components/store/product/products";
 
