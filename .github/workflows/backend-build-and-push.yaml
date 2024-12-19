@@ -25,15 +25,12 @@ jobs:
       - name: Push Docker Image
         run: docker push hojiakbar2806/m-look_backend:latest
 
-      - name: Check Git Configuration
-        run: |
-          git config --global --list
-
       - name: Deploy to AWS
         run: |
-          echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
 
-          ssh -o StrictHostKeyChecking=no ubuntu@13.53.95.28 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ubuntu@13.53.95.28 << 'EOF'
             cd ~/m-look
 
             git pull -f origin main
