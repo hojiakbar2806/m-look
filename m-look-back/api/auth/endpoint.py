@@ -1,17 +1,17 @@
 from sqlalchemy import select
-from datetime import datetime, timedelta
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, Cookie
 
 from api.auth import schemas
+from api.auth.dependency import get_verified_user, valid_user
 from core.security import jwt
 from core.enums import TokenType
 from models.user import Profile, User
 from database.session import get_async_session
 from core.security.hashing import hash_password
 from core.security.utils import verify_user_token
-from api.auth.dependency import get_verified_user, valid_user
+from utils.utils import set_refresh_token_cookie, create_tokens
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -21,10 +21,8 @@ async def register_user(
     user: schemas.Register = Depends(valid_user),
     session: AsyncSession = Depends(get_async_session),
 ):
-
     user.hashed_password = hash_password(user.hashed_password)
     new_user = User(**user.model_dump())
-    token = jwt.generate_activation_token(new_user.username)
     session.add(new_user)
     await session.commit()
     new_profile = Profile(
@@ -36,10 +34,14 @@ async def register_user(
     session.add(new_profile)
     await session.commit()
     await session.refresh(new_user)
-    return JSONResponse(
+    refresh_token, access_token = create_tokens(new_user.username)
+    response = JSONResponse(
         status_code=200,
-        content={"message": "Activation link sent to your email", "token": token}
-    )
+        content={
+            "message": "Activation link sent to your email",
+            "access_token": access_token
+        })
+    set_refresh_token_cookie(response, refresh_token)
 
 
 @router.post("/activate/{token}")
@@ -51,41 +53,20 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
         raise HTTPException(status_code=400, detail="User not found")
     user.is_active = True
     await session.commit()
-    refresh_token = jwt.create_refresh_token(sub)
-    expires = datetime.utcnow() + timedelta(days=30)
-    response = JSONResponse(
+    return JSONResponse(
         status_code=200,
         content={"message": "Account verified"}
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        max_age=30 * 24 * 60 * 60,
-        expires=int(expires.timestamp()),
-        httponly=True,
-        secure=True,
-        samesite='None'
-    )
-    return response
 
 
 @router.post("/login", response_model=schemas.TokenResponse)
 async def login_user(user: User = Depends(get_verified_user)):
-    refresh_token = jwt.create_refresh_token(user.username)
-    access_token = jwt.create_access_token(user.username)
-    expires = datetime.utcnow() + timedelta(days=30)
+    refresh_token, access_token = create_tokens(user.username)
     response = JSONResponse(
         status_code=200,
         content={"message": "Login successfully", "access_token": access_token}
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        expires=int(expires.timestamp()),
-        httponly=True,
-        secure=True,
-        samesite='None'
-    )
+    set_refresh_token_cookie(response, refresh_token)
     return response
 
 
@@ -113,9 +94,15 @@ async def refresh_session(
     session: AsyncSession = Depends(get_async_session)
 ):
     if not refresh_token:
-        raise HTTPException(status_code=400, detail="You are not registered")
+        raise HTTPException(status_code=400, detail="You are not logged in")
 
     user = await verify_user_token(refresh_token, session, TokenType.REFRESH)
-    token = jwt.create_access_token(user.username)
+    access_token = jwt.create_access_token(user.username)
 
-    return JSONResponse(status_code=200, content={"message": "Access token successfully refreshed", "access_token": token})
+    return JSONResponse(
+        status_code=200,
+        content={
+            "message": "Access token successfully refreshed",
+            "access_token": access_token
+        }
+    )

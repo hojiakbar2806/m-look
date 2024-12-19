@@ -1,8 +1,8 @@
-from pydantic import BaseModel, ConfigDict, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
 from typing import Optional
 
-from core.enums import GenderEnum, RoleEnum
+from core.enums import RoleEnum
 
 
 class TimeMix(BaseModel):
