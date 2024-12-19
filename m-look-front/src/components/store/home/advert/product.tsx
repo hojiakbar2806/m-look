@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { IAdsContent } from "src/types/product";
-import classNames from "classnames";
+import { cn } from "src/utils/utils";
 
 const AdsProduct = ({ ads }: { ads: IAdsContent }) => {
   return (
@@ -11,7 +11,7 @@ const AdsProduct = ({ ads }: { ads: IAdsContent }) => {
 
         return (
           <div
-            className={classNames(
+            className={cn(
               "w-full sm:w-1/2 md:w-[40%] xl:w-1/4 p-4 flex flex-col justify-between sm:shadow-lg rounded-[30%] sm:rounded-md items-center gap-6 bg-white",
               {
                 "hidden xl:flex": isLastProduct,

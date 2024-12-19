@@ -35,11 +35,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   logout: async () => {
-    try {
-      await LogoutService();
-      set({ token: null });
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+    await LogoutService();
+    window.location.href = "/";
   },
 }));

@@ -36,8 +36,7 @@ export const RegisterService = async (data: IUserRegister) => {
 export const LogoutService = async () => {
   try {
     const res = await axiosWithCredentials.post("auth/logout");
-    window.location.href = "/";
-    return res;
+    toast.success(res.data.message);
   } catch (error: unknown) {
     if (isAxiosError(error)) {
       toast.error(error.response?.data.detail || "Logout failed");

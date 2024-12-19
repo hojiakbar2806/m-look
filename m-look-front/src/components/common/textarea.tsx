@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import clx from "classnames";
+import { cn } from "src/utils/utils";
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
   label: string;
@@ -23,7 +23,7 @@ const Textarea: React.FC<TextareaProps> = React.memo(
     return (
       <label
         htmlFor={label}
-        className={clx(
+        className={cn(
           "relative w-full border border-gray-300 rounded",
           className
         )}
@@ -34,15 +34,15 @@ const Textarea: React.FC<TextareaProps> = React.memo(
           value={value}
           onChange={handleChange}
           autoComplete="off"
-          className={clx(
+          className={cn(
             "peer w-full p-2.5 outline-none border-none bg-transparent autofill:bg-white focus:border-primary",
             className
           )}
         />
         <span
-          className={clx(
+          className={cn(
             "absolute left-3 bg-white text-gray-500 transition-all duration-200 top-2 peer-focus:-top-3",
-            value ? "-top-3 text-primary" : "top-1/2"
+            value ? "-top-3 text-primary" : "top-2"
           )}
         >
           {label}

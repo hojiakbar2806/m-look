@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import clx from "classnames";
+import { cn } from "src/utils/utils";
 
 interface InputProps extends React.ComponentProps<"input"> {
   label: string;
@@ -30,15 +30,15 @@ const Input: React.FC<InputProps> = React.memo(
           {...props}
           value={value}
           onChange={handleChange}
-          className={clx(
+          className={cn(
             "peer w-full focus:border-primary autofill:bg-white border-none bg-transparent p-2.5 outline-none",
             className
           )}
         />
         <span
-          className={clx(
+          className={cn(
             "bg-white absolute  peer-focus:top-0 left-3 -translate-y-1/2 text-gray-500 transition-all duration-200",
-            value ? "text-primary top-0" : " top-1/2"
+            value ? "top-0" : " top-1/2"
           )}
         >
           {label}
@@ -47,5 +47,5 @@ const Input: React.FC<InputProps> = React.memo(
     );
   }
 );
-Input.displayName="Input"
+Input.displayName = "Input";
 export default Input;

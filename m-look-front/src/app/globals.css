@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply w-full flex flex-col items-center;
+  }
+
+  main.app {
+    @apply max-w-[1710px] w-full min-h-screen flex flex-col;
+  }
+
+  .app-container {
+    @apply p-4 md:px-16 lg:px-24;
+  }
+}
+
+@layer utilities {
+  .app-icon {
+    @apply size-5;
+  }
+}

@@ -4,8 +4,6 @@ import { ChevronDown, LayoutGrid, LayoutList } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "src/redux/store";
 
 type ProductBarProps = {
   productLength: number;
@@ -18,7 +16,6 @@ const ProductBar: React.FC<ProductBarProps> = ({ productLength }) => {
 
   const [open, setOpen] = useState(false);
   const [showSize, setShowSize] = useState(false);
-  const navbarState = useSelector((state: RootState) => state.navbarHeight);
 
   const params = new URLSearchParams(searchParams.toString());
   const view = params.get("view") === "list" ? "list" : "grid";
@@ -64,10 +61,7 @@ const ProductBar: React.FC<ProductBarProps> = ({ productLength }) => {
   }, []);
 
   return (
-    <div
-      data-state={navbarState.isTop}
-      className="w-full data-[state=true]:top-32 sticky top-[80px] z-20 flex items-center justify-between p-4 bg-gray-100 rounded-md transition-all duration-300"
-    >
+    <div className="w-full data-[state=true]:top-32 sticky top-[80px] z-20 flex items-center justify-between p-4 bg-gray-100 rounded-md transition-all duration-300">
       <div className="flex items-center justify-center gap-6">
         <h2 className="text-xl font-medium">{productLength} Items</h2>
         <div className="relative flex items-center">
