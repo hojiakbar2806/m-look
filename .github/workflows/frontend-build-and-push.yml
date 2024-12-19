@@ -1,4 +1,4 @@
-name: Rental frontend deploy
+name: M-Look frontend deploy
 
 on:
   push:
@@ -27,13 +27,6 @@ jobs:
 
       - name: Verify Docker Image
         run: docker inspect hojiakbar2806/m-look_frontend:latest --format '{{.Id}}'
-
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
 
       - name: Verify Directory Structure
         run: ls -alh ./m-look-front
