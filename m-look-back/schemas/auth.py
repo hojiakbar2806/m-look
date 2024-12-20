@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, EmailStr
 class Register(BaseModel):
     full_name: str = Field(..., min_length=3, max_length=100)
     email: EmailStr
-    username: str   
+    username: str
     phone_number: str
     hashed_password: str = Field(..., min_length=4, alias="password")
 

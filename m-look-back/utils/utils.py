@@ -1,8 +1,12 @@
 from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from sqlalchemy import select
 
 from core.security import jwt
 from core.config import settings
+from models.user import User
 
 
 def to_came_case(name: str) -> str:
@@ -25,3 +29,19 @@ def set_refresh_token_cookie(response: JSONResponse, refresh_token: str):
         secure=True,
         samesite='None'
     )
+
+
+async def get_user_by_username(session: AsyncSession, username: str) -> User:
+    stmt = select(User)
+    query = stmt.where(User.username == username)
+    result = await session.execute(query)
+    user_in_db = result.scalar_one_or_none()
+    return user_in_db
+
+
+async def get_user_by_email(session: AsyncSession, email: str):
+    stmt = select(User)
+    query = stmt.where(User.email == email)
+    result = await session.execute(query)
+    user_in_db = result.scalar_one_or_none()
+    return user_in_db

@@ -1,9 +1,8 @@
 from typing import List
 from core.enums import RoleEnum
+from dependencies.auth import current_auth_user
 from models.user import User
-from core.dependency import current_auth_user
 from fastapi import Depends, HTTPException, status
-
 
 from fastapi import HTTPException, status
 from functools import wraps

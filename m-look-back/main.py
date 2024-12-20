@@ -5,15 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 
 
-from api.user import user_router
-from api.auth import auth_router
-from api.product import product_router
+from router import user
+from router import auth
 
 
 app = FastAPI(
     version="1.0.0",
-    title="FastAPI",
-    description="FastAPI ilovasi",
+    title="M-look API",
+    description="M-look API",
     openapi_url=f"{settings.API_ENDPOINT}/openapi.json",
     docs_url=f"{settings.API_ENDPOINT}/docs",
     redoc_url=f"{settings.API_ENDPOINT}/redoc",
@@ -22,7 +21,6 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -37,9 +35,8 @@ router = APIRouter(prefix=settings.API_ENDPOINT)
 async def root():
     return {"message": "It works!!!"}
 
-router.include_router(auth_router)
-router.include_router(product_router)
-router.include_router(user_router)
+router.include_router(auth.router)
+router.include_router(user.router)
 
 app.include_router(router)
 

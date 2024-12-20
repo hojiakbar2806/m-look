@@ -3,11 +3,12 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, Cookie
 
-from api.auth import schemas
-from api.auth.dependency import get_verified_user, valid_user
 from core.security import jwt
 from core.enums import TokenType
+from schemas import auth as schemas
 from models.user import Profile, User
+from dependencies import auth as auth_deps
+
 from database.session import get_async_session
 from core.security.hashing import hash_password
 from core.security.utils import verify_user_token
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register")
 async def register_user(
-    user: schemas.Register = Depends(valid_user),
+    user: schemas.Register = Depends(auth_deps.get_not_exist_user),
     session: AsyncSession = Depends(get_async_session),
 ):
     user.hashed_password = hash_password(user.hashed_password)
@@ -42,16 +43,19 @@ async def register_user(
             "access_token": access_token
         })
     set_refresh_token_cookie(response, refresh_token)
+    return response
 
 
 @router.post("/activate/{token}")
 async def activate_user(token: str, session: AsyncSession = Depends(get_async_session)):
     sub = jwt.decode_activation_token(token).get("sub")
-    stmt = select(User).where(User.username == sub)
-    user = (await session.execute(stmt)).scalar_one_or_none()
-    if user is None:
+    stmt = select(User)
+    query = stmt.where(User.username == sub)
+    result = await session.execute(query)
+    user_in_db = result.scalar_one_or_none()
+    if user_in_db is None:
         raise HTTPException(status_code=400, detail="User not found")
-    user.is_active = True
+    user_in_db.is_active = True
     await session.commit()
     return JSONResponse(
         status_code=200,
@@ -60,7 +64,7 @@ async def activate_user(token: str, session: AsyncSession = Depends(get_async_se
 
 
 @router.post("/login", response_model=schemas.TokenResponse)
-async def login_user(user: User = Depends(get_verified_user)):
+async def login_user(user: User = Depends(auth_deps.get_verified_user)):
     refresh_token, access_token = create_tokens(user.username)
     response = JSONResponse(
         status_code=200,

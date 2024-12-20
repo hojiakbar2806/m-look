@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     SQL_DB_URL: str
+    SECRET_KEY: str
 
     @property
     def URL(self) -> str:
@@ -35,8 +36,6 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRES_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRES_MINUTES: int = (60*10)
     ACTIVATION_TOKEN_EXPIRES_MINUTS: int = 2
-
-    SECRET_KEY: str = "f56bd6bc8efed7bad12675f761e69f36ff8f403cc471da0028b8ea6cd95bfbe9"
 
 
 settings = Settings()

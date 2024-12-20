@@ -7,6 +7,7 @@ class RoleEnum(Enum):
     OWNER = "owner"
     MODERATOR = "moderator"
 
+
 class GenderEnum(Enum):
     MALE = "male"
     FEMALE = "female"

@@ -1,28 +1,29 @@
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from api.auth.dependency import valid_user
-from api.user import schemas
+
+from schemas import user as user_schemas
 from core.enums import RoleEnum
+from dependencies.auth import current_auth_user, get_not_exist_user
 from models.user import Profile, User
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.protected_route import protected_route
-from core.dependency import current_auth_user
 from core.security.hashing import hash_password
 from database.session import get_async_session
 
 router = APIRouter(prefix="/user", tags=["User"])
 
 
-@router.get("/me", response_model=schemas.UserProfileOut)
+@router.get("/me", response_model=user_schemas.UserProfileOut)
 async def get_me(
     current_user: User = Depends(current_auth_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    stmt = select(User).options(selectinload(User.profile)
-                                ).filter(User.id == current_user.id)
+    stmt = select(User)
+    query = stmt.options(selectinload(User.profile))
+    query = query.where(User.id == current_user.id)
 
-    result = await session.execute(stmt)
+    result = await session.execute(query)
     user_with_profile = result.scalars().first()
 
     if not user_with_profile:
@@ -35,11 +36,10 @@ async def get_me(
 @protected_route([RoleEnum.USER])
 async def create_user(
     current_user: User = Depends(current_auth_user),
-    user: schemas.UserIn = Depends(valid_user),
+    user: user_schemas.UserIn = Depends(get_not_exist_user),
     session: AsyncSession = Depends(get_async_session)
-) -> schemas.UserOut:
+) -> user_schemas.UserOut:
     hashed_password = hash_password(user.hashed_password)
-
     db_user = User(**user.model_dump())
     db_user.hashed_password = hashed_password
     db_user.is_active = True
@@ -55,5 +55,5 @@ async def create_user(
 
 
 @router.patch("/user")
-async def updated_user(user: schemas.UserUpdate):
+async def updated_user(user: user_schemas.UserUpdate):
     pass
