@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str
 
     @property
-    def URL(self) -> str:
+    def DB_URL(self) -> str:
         if self.APP_ENV == "production":
             return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         else:
@@ -33,8 +33,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "RS256"
     PRIVATE_KEY_PATH: Path = CORE / "certs" / "jwt-private.pem"
     PUBLIC_KEY_PATH: Path = CORE / "certs" / "jwt-public.pem"
-    ACCESS_TOKEN_EXPIRES_MINUTES: int = 15
-    REFRESH_TOKEN_EXPIRES_MINUTES: int = (60*10)
+    ACCESS_TOKEN_EXPIRES_MINUTES: float = .5
+    REFRESH_TOKEN_EXPIRES_MINUTES: float = .2
     ACTIVATION_TOKEN_EXPIRES_MINUTS: int = 2
 
 

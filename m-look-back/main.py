@@ -1,13 +1,11 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
-
-
 from router import user
 from router import auth
-
 
 app = FastAPI(
     version="1.0.0",
@@ -24,9 +22,9 @@ app.add_middleware(
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
-
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 router = APIRouter(prefix=settings.API_ENDPOINT)
 

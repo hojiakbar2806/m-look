@@ -98,7 +98,7 @@ async def refresh_session(
     session: AsyncSession = Depends(get_async_session)
 ):
     if not refresh_token:
-        raise HTTPException(status_code=400, detail="You are not logged in")
+        raise HTTPException(status_code=401, detail="You are not logged in")
 
     user = await verify_user_token(refresh_token, session, TokenType.REFRESH)
     access_token = jwt.create_access_token(user.username)

@@ -10,7 +10,7 @@ ALGORITHM = settings.ALGORITHM
 SECRET_KEY = settings.SECRET_KEY
 ACCESS_EXP_MIN = settings.ACCESS_TOKEN_EXPIRES_MINUTES
 REFRESH_EXP_MIN = settings.REFRESH_TOKEN_EXPIRES_MINUTES
-ACTIVATION_TOKEN_EXPIRES_MINUTS = settings.ACTIVATION_TOKEN_EXPIRES_MINUTS
+ACTIVATION_TOKEN_EXP = settings.ACTIVATION_TOKEN_EXPIRES_MINUTS
 
 
 def encode_jwt(payload: dict, token_type: str, expires_delta: timedelta) -> str:
@@ -53,7 +53,7 @@ def create_refresh_token(sub: str) -> str:
 
 
 def generate_activation_token(payload: str) -> str:
-    expires_delta = timedelta(minutes=ACTIVATION_TOKEN_EXPIRES_MINUTS)
+    expires_delta = timedelta(minutes=ACTIVATION_TOKEN_EXP)
     to_encode = {
         "sub": payload,
         "type": "Activation",
