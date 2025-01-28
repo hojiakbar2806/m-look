@@ -30,18 +30,6 @@ services:
     networks:
       - app-network
 
-  postgres:
-    image: postgres:latest
-    container_name: m-look-postgres
-    ports:
-      - "5432:5432"
-    env_file:
-      - m-look-back/.env
-    volumes:
-      - ./postgres_container:/var/lib/postgresql/data
-    networks:
-      - app-network
-
 
   nginx:
     image: nginx:latest
