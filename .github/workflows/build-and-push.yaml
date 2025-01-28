@@ -37,6 +37,11 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_BACKEND_IMAGE }}:latest
           cache-from: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_BACKEND_IMAGE }}:latest
 
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy to AWS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << EOF
