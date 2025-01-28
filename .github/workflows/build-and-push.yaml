@@ -39,20 +39,19 @@ jobs:
 
       - name: Deploy to AWS
         run: |
-          ssh -o StrictHostKeyChecking=no -i "~/ssh_key" ubuntu@13.53.95.28 << 'EOF'
-            cd ~/m-look
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << EOF
+          cd ~/m-look
 
-            git pull -f origin main
+          git pull origin main
 
-            sudo rm -rf m-look-front m-look-back .github
+          sudo rm -rf m-look-front m-look-back .github
 
-            sudo docker pull hojiakbar2806/m-look_backend:latest
+          sudo docker pull hojiakbar2806/m-look_backend:latest
 
-            sudo docker-compose stop backend
-            sudo docker-compose rm -f backend
-            sudo docker-compose up -d backend
+          sudo docker-compose down
+          sudo docker-compose rm -f
+          sudo docker-compose up -d
 
-            sudo docker image prune -f
-            sudo docker container prune -f
+          sudo docker image prune -f
+          sudo docker container prune -f
           EOF
