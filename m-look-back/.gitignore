@@ -1,0 +1,76 @@
+# *
+postgres_container
+
+# Python uchun
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+*.sqlite3
+
+# Virtual environment papkasi
+env/
+venv/
+.venv/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Migrations va cache papkalari
+instance/
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# FastAPI static va media fayllari
+/static/
+*.log
+/media/
+
+# Alembic uchun (agar ishlatsangiz)
+alembic/versions/*.pyc
+alembic/versions/*.pyo
+alembic/versions/*.pyd
+
+# Node.js uchun
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# Next.js build va log fayllari
+.next/
+out/
+*.log
+
+# Docker uchun
+docker-compose.override.yml
+.docker/
+docker-compose.yml
+docker-compose.prod.yml
+.dockerignore
+*.env
+.env.local
+.env.production
+.env.test
+.env.development
+
+# OS uchun
+.DS_Store
+Thumbs.db
+
+# Git uchun
+!.gitignore
+
+# Boshqa cache va muhim bo‘lmagan fayllar
+*.swp
+*.swo
+*.swn
+*~
+.idea/
+.vscode/
+.vscode/*
