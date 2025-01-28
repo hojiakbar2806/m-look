@@ -1,27 +1,29 @@
 FROM node:20-alpine AS base
 
-FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm ci
 
 FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+COPY package.json package-lock.json ./
+
+RUN npm ci
+
 COPY . .
-RUN npm run build
+
+RUN npm run build && npm prune --production
 
 FROM node:20-alpine AS runner
-WORKDIR /app
-
-COPY --from=builder /app/.next /app/.next
-COPY --from=builder /app/public /app/public
-COPY --from=builder /app/package.json /app/package.json
 
 ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 USER node
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
