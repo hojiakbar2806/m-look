@@ -1,5 +1,5 @@
 networks:
-  m-look-network:
+  app-network:
     driver: bridge
 
 services:
@@ -25,8 +25,6 @@ services:
     container_name: m-look-frontend
     environment:
       - NODE_ENV=production
-    env_file:
-      - .env  
     expose:
       - "3000"
     networks:

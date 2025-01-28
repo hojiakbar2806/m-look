@@ -1,4 +1,4 @@
-name: M-Look backend deploy
+name: M-Look deploy
 
 on:
   push:
