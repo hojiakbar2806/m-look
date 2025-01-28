@@ -19,23 +19,24 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Build frontend Docker Image
-        uses: docker/build-push-action@v3
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_FRONTEND_IMAGE }}:latest
-          no-cache: true
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --cache-from hojiakbar2806/m-look_frontend:latest \
+            --tag hojiakbar2806/m-look_frontend:latest ./frontend
 
-      - name: Build backend Docker Image
-        uses: docker/build-push-action@v3
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_BACKEND_IMAGE }}:latest
-          no-cache: true
+      - name: Push Docker Image
+        run: docker push hojiakbar2806/m-look_frontend:latest
+        
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --cache-from hojiakbar2806/m-look_backend:latest \
+            --tag hojiakbar2806/m-look_backend:latest ./backend
+
+      - name: Push Docker Image
+        run: docker push hojiakbar2806/m-look_backend:latest
 
       - name: Deploy to AWS
         run: |
