@@ -1,27 +1,27 @@
-
 FROM node:20-alpine AS base
 
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN apk add --no-cache libc6-compat && npm ci
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
 RUN npm run build
 
-FROM base AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder /app/.next /app/.next
+COPY --from=builder /app/public /app/public
+COPY --from=builder /app/package.json /app/package.json
 
 ENV NODE_ENV=production
+
+USER node
+
+EXPOSE 3000
 
 CMD ["npm", "start"]
