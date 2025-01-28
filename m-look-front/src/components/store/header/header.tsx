@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
-import { UserRound } from "lucide-react";
+import { Search, UserRound } from "lucide-react";
 import CartComp from "./cartComp";
 import SearchBar from "./searchComp";
 
@@ -20,7 +20,13 @@ const Header: React.FC = () => {
           </Link>
         </li>
         <CartComp />
-        <Suspense>
+        <Suspense
+          fallback={
+            <label className="p-1">
+              <Search className="app-icon cursor-pointer" />
+            </label>
+          }
+        >
           <SearchBar />
         </Suspense>
       </ul>

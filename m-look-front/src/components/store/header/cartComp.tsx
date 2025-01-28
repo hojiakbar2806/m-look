@@ -1,7 +1,7 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import useCartStore from "src/store/cartStore";
 
 const CartComp = () => {
@@ -10,7 +10,7 @@ const CartComp = () => {
 
   const totalItems = getItemCount();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     seIsClient(true);
   }, []);
 

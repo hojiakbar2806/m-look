@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import CartDialog from "src/components/store/cartDialog/cartDialog";
+import Header from "src/components/store/header/header";
 import ReactQueryProvider from "src/providers/reactQueryProvider";
 
 const poppins = localFont({

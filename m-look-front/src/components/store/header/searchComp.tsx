@@ -24,7 +24,7 @@ export default function SearchBar() {
   return (
     <li className="flex items-center">
       <label
-        data-focused={isOpen}
+        data-focused={Boolean(isOpen || searchParams.get("query"))}
         htmlFor="search"
         className="group relative items-center flex p-1 border rounded-md  border-transparent
         data-[focused=true]:border-blue-500"
@@ -36,6 +36,7 @@ export default function SearchBar() {
           className="w-0 transition-all text-xs sm:text-sm md:text-lg text-dark placeholder:text-dark/50 duration-300 outline-none
           group-data-[focused=true]:w-32 
           group-data-[focused=true]:sm:w-60"
+          defaultValue={searchParams.get("query") ?? ""}
           placeholder="Search..."
           type="text"
           id="search"
