@@ -15,8 +15,6 @@ services:
       - m-look-back/.env  
     expose:
       - "8000"
-    depends_on:
-      - postgres
     networks:
       - app-network
 

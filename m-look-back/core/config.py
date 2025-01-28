@@ -36,3 +36,8 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+print("----------------")
+print(settings.URL)
+print("----------------")
