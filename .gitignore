@@ -9,6 +9,7 @@ __pycache__/
 *.pyc
 .Python
 *.sqlite3
+.env
 
 # Virtual environment papkasi
 env/
